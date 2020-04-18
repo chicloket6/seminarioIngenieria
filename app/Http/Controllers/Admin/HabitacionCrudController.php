@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Requests\HabitacionRequest;
+use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+
+/**
+ * Class HabitacionCrudController
+ * @package App\Http\Controllers\Admin
+ * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ */
+class HabitacionCrudController extends CrudController
+{
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+
+    public function setup()
+    {
+        $this->crud->setModel('App\Models\Habitacion');
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/habitacion');
+        $this->crud->setEntityNameStrings('habitación', 'habitaciones');
+    }
+
+    protected function setupListOperation()
+    {
+        // TODO: remove setFromDb() and manually define Columns, maybe Filters
+        $this->crud->setFromDb();
+    }
+
+    protected function setupCreateOperation()
+    {
+        $this->crud->setValidation(HabitacionRequest::class);
+
+        // TODO: remove setFromDb() and manually define Fields
+        //$this->crud->setFromDb();
+        $this->crud->addField([
+            'name' => 'numero',
+            'label' => 'Número',
+            'type' => 'text'
+        ]);
+
+        $this->crud->addField([  // Select2
+            'label' => "Tipo de habitación",
+            'type' => 'select2',
+            'name' => 'tipos_habitacion_id', // the db column for the foreign key
+            'entity' => 'category', // the method that defines the relationship in your Model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+         
+            // optional
+            'model' => "App\Models\Category", // foreign key model
+            'default' => 2, // set the default value of the select2
+            'options'   => (function ($query) {
+                 return $query->orderBy('name', 'ASC')->where('depth', 1)->get();
+            }), // force the related options to be a custom query, instead of all(); you can use this to filter the results show in the select
+        ]);
+    }
+
+    protected function setupUpdateOperation()
+    {
+        $this->setupCreateOperation();
+    }
+}
