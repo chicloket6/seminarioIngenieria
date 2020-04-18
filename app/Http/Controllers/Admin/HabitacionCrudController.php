@@ -29,7 +29,21 @@ class HabitacionCrudController extends CrudController
     protected function setupListOperation()
     {
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
-        $this->crud->setFromDb();
+        //$this->crud->setFromDb();
+        $this->crud->addColumn([
+            'name' => 'numero', // The db column name
+            'label' => "Número", // Table column heading
+         ]);
+
+         $this->crud->addColumn([
+            'name' => 'tipoHabitacion.nombre', // The db column name
+            'label' => "Tipo de hacbitación", // Table column heading
+         ]);
+
+         $this->crud->addColumn([
+            'name' => 'status.nombre', // The db column name
+            'label' => "Estatus", // Table column heading
+         ]);
     }
 
     protected function setupCreateOperation()
@@ -48,15 +62,16 @@ class HabitacionCrudController extends CrudController
             'label' => "Tipo de habitación",
             'type' => 'select2',
             'name' => 'tipos_habitacion_id', // the db column for the foreign key
-            'entity' => 'category', // the method that defines the relationship in your Model
-            'attribute' => 'name', // foreign key attribute that is shown to user
-         
-            // optional
-            'model' => "App\Models\Category", // foreign key model
-            'default' => 2, // set the default value of the select2
-            'options'   => (function ($query) {
-                 return $query->orderBy('name', 'ASC')->where('depth', 1)->get();
-            }), // force the related options to be a custom query, instead of all(); you can use this to filter the results show in the select
+            'entity' => 'tipoHabitacion', // the method that defines the relationship in your Model
+            'attribute' => 'nombre', // foreign key attribute that is shown to user
+        ]);
+
+        $this->crud->addField([  // Select2
+            'label' => "Estatus",
+            'type' => 'select2',
+            'name' => 'status_id', // the db column for the foreign key
+            'entity' => 'status', // the method that defines the relationship in your Model
+            'attribute' => 'nombre', // foreign key attribute that is shown to user
         ]);
     }
 
