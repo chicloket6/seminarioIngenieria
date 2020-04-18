@@ -9,3 +9,5 @@
 	  <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i class="nav-icon fa fa-key"></i> <span>Permissions</span></a></li>
 	</ul>
 </li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('tipohabitacion') }}'><i class='nav-icon fa fa-question'></i> Tipos De Habitaciones</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('statushabitacion') }}'><i class='nav-icon fa fa-question'></i> Status De La Habitación</a></li>
