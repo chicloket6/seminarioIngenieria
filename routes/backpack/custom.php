@@ -15,4 +15,5 @@ Route::group([
     Route::crud('habitacion', 'HabitacionCrudController');
     Route::crud('tipohabitacion', 'TipoHabitacionCrudController');
     Route::crud('statushabitacion', 'StatusHabitacionCrudController');
+    Route::crud('cliente', 'ClienteCrudController');
 }); // this should be the absolute last line of this file
