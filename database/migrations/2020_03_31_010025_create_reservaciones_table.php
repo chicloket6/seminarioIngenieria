@@ -17,7 +17,7 @@ class CreateReservacionesTable extends Migration
             $table->bigIncrements('id');
             $table->dateTime('fecha_entrada');
             $table->dateTime('fecha_salida');
-            $table->boolean('status_habitacion');
+            $table->boolean('status_reservacion')->default(1);
 
             $table->unsignedBigInteger('habitacion_id')->nullable();
             $table->foreign('habitacion_id')->references('id')->on('habitaciones');

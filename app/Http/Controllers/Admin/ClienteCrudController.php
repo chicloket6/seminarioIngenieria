@@ -23,7 +23,7 @@ class ClienteCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\Cliente');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/cliente');
-        $this->crud->setEntityNameStrings('cliente', 'clientes');
+        $this->crud->setEntityNameStrings('Cliente', 'Clientes');
     }
 
     protected function setupListOperation()

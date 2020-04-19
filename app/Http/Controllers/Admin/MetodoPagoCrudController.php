@@ -23,7 +23,7 @@ class MetodoPagoCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\MetodoPago');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/metodopago');
-        $this->crud->setEntityNameStrings('método', 'Métodos de pago');
+        $this->crud->setEntityNameStrings('Método', 'Métodos de pago');
     }
 
     protected function setupListOperation()
