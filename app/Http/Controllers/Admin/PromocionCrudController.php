@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\TipoHabitacionRequest;
+use App\Http\Requests\PromocionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class TipoHabitacionCrudController
+ * Class PromocionCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class TipoHabitacionCrudController extends CrudController
+class PromocionCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -21,9 +21,9 @@ class TipoHabitacionCrudController extends CrudController
 
     public function setup()
     {
-        $this->crud->setModel('App\Models\TipoHabitacion');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/tipohabitacion');
-        $this->crud->setEntityNameStrings('Tipo De Habitación', 'Tipo De Habitación');
+        $this->crud->setModel('App\Models\Promocion');
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/promocion');
+        $this->crud->setEntityNameStrings('Promoción', 'Promociones');
     }
 
     protected function setupListOperation()
@@ -34,7 +34,7 @@ class TipoHabitacionCrudController extends CrudController
 
     protected function setupCreateOperation()
     {
-        $this->crud->setValidation(TipoHabitacionRequest::class);
+        $this->crud->setValidation(PromocionRequest::class);
 
         // TODO: remove setFromDb() and manually define Fields
         $this->crud->setFromDb();

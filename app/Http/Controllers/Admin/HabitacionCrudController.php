@@ -37,7 +37,7 @@ class HabitacionCrudController extends CrudController
 
          $this->crud->addColumn([
             'name' => 'tipoHabitacion.nombre', // The db column name
-            'label' => "Tipo de hacbitación", // Table column heading
+            'label' => "Tipo de habitación", // Table column heading
          ]);
 
          $this->crud->addColumn([

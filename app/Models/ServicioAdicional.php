@@ -6,7 +6,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Habitacion extends Model
+class ServicioAdicional extends Model
 {
     use CrudTrait;
     use SoftDeletes;
@@ -17,7 +17,7 @@ class Habitacion extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'habitaciones';
+    protected $table = 'servicios_adicional';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -36,14 +36,6 @@ class Habitacion extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
-    public function tipoHabitacion(){
-        return $this->belongsTo('App\Models\TipoHabitacion', 'tipos_habitacion_id');
-    }
-
-    public function status(){
-        return $this->belongsTo('App\Models\StatusHabitacion', 'status_id');
-    }
 
     /*
     |--------------------------------------------------------------------------
