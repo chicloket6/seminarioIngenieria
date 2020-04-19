@@ -36,16 +36,16 @@ class Reservacion extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function Habitacion(){
+    public function habitacion(){
         return $this->belongsTo('App\Models\Habitacion', 'habitacion_id');
     }
-    public function Cliente(){
+    public function cliente(){
         return $this->belongsTo('App\Models\Cliente', 'cliente_id');
     }
-    public function MetodoPago(){
+    public function metodoPago(){
         return $this->belongsTo('App\Models\MetodoPago', 'metodo_pago_id');
     }
-    public function Promocion(){
+    public function promocion(){
         return $this->belongsTo('App\Models\Promocion', 'promocion_id');
     }
     /*
