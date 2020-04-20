@@ -183,7 +183,11 @@ class ReservacionCrudController extends CrudController
         $this->crud->addField([
             'name' => 'costo_total',
             'label' => 'Calcular Total',
-            'type' => 'calcular_total'//VISTA PERSONALIZADA, SE ENCUENTRA EN resources/views/vendor/crud/fields
+            'type' => 'calcular_total',//VISTA PERSONALIZADA, SE ENCUENTRA EN resources/views/vendor/crud/fields
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+
         ]);
     }
 
@@ -194,6 +198,11 @@ class ReservacionCrudController extends CrudController
 
     public function store()
     {
+        $costo_total = $this->crud->request->request->get('costo_total');
+
+        if($costo_total){
+            $this->crud->request->request->set('costo_total', str_replace(',', '', $costo_total));
+        }
         // do something before validation, before save, before everything; for example:
         // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
         // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);

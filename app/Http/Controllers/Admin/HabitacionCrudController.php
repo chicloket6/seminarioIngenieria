@@ -55,7 +55,10 @@ class HabitacionCrudController extends CrudController
         $this->crud->addField([
             'name' => 'numero',
             'label' => 'Número',
-            'type' => 'text'
+            'type' => 'text',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
         $this->crud->addField([  // Select2
@@ -64,6 +67,9 @@ class HabitacionCrudController extends CrudController
             'name' => 'tipos_habitacion_id', // the db column for the foreign key
             'entity' => 'tipoHabitacion', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
         $this->crud->addField([  // Select2
@@ -72,6 +78,9 @@ class HabitacionCrudController extends CrudController
             'name' => 'status_id', // the db column for the foreign key
             'entity' => 'status', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
     }
 

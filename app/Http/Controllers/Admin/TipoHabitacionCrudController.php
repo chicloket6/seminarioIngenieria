@@ -37,7 +37,27 @@ class TipoHabitacionCrudController extends CrudController
         $this->crud->setValidation(TipoHabitacionRequest::class);
 
         // TODO: remove setFromDb() and manually define Fields
-        $this->crud->setFromDb();
+        //$this->crud->setFromDb();
+        $this->crud->addField(
+            [   // Text
+                'name' => 'nombre',
+                'label' => "Nombre",
+                'type' => 'text',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
+        $this->crud->addField(
+            [   // Text
+                'name' => 'costo',
+                'label' => "Costo",
+                'type' => 'text',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
     }
 
     protected function setupUpdateOperation()

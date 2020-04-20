@@ -28,6 +28,7 @@ class TipoHabitacionRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
             'nombre' => 'required|unique:tipos_habitacion',
+            'costo' => 'required|numeric',
         ];
     }
 

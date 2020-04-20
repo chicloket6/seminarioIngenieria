@@ -37,7 +37,17 @@ class StatusHabitacionCrudController extends CrudController
         $this->crud->setValidation(StatusHabitacionRequest::class);
 
         // TODO: remove setFromDb() and manually define Fields
-        $this->crud->setFromDb();
+        //$this->crud->setFromDb();
+        $this->crud->addField(
+            [   // Text
+                'name' => 'nombre',
+                'label' => "Nombre",
+                'type' => 'text',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
     }
 
     protected function setupUpdateOperation()

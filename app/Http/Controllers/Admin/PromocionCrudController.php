@@ -37,7 +37,47 @@ class PromocionCrudController extends CrudController
         $this->crud->setValidation(PromocionRequest::class);
 
         // TODO: remove setFromDb() and manually define Fields
-        $this->crud->setFromDb();
+        //$this->crud->setFromDb();
+        $this->crud->addField(
+            [   // Text
+                'name' => 'nombre',
+                'label' => "Nombre",
+                'type' => 'text',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
+        $this->crud->addField(
+            [   // Text
+                'name' => 'fecha_inicio',
+                'label' => "Fecha De Inicio",
+                'type' => 'datetime_picker',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
+        $this->crud->addField(
+            [   // Text
+                'name' => 'fecha_final',
+                'label' => "Fecha De Fin",
+                'type' => 'datetime_picker',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
+        $this->crud->addField(
+            [   // Text
+                'name' => 'descuento',
+                'label' => "Descuento %",
+                'type' => 'number',
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
     }
 
     protected function setupUpdateOperation()
