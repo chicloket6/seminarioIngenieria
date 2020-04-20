@@ -94,6 +94,7 @@ class ReservacionCrudController extends CrudController
             'name' => 'fecha_entrada',
             'type' => 'datetime_picker',
             'label' => 'Fecha De Entrada',
+            'minDate' => Carbon::now()->toDateString(),
             // optional:
             'date_picker_options' => [
                'todayBtn' => 'linked',
@@ -109,6 +110,7 @@ class ReservacionCrudController extends CrudController
             'name' => 'fecha_salida',
             'type' => 'datetime_picker',
             'label' => 'Fecha De Salida',
+            'minDate' => Carbon::now()->toDateString(),
             // optional:
             'date_picker_options' => [
                'todayBtn' => 'linked',
@@ -208,6 +210,12 @@ class ReservacionCrudController extends CrudController
         // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
         // $this->crud->request->request->remove('password_confirmation');
         // $this->crud->removeField('password_confirmation');
+        $costo_total = $this->crud->request->request->get('costo_total');
+
+        if($costo_total){
+            $this->crud->request->request->set('costo_total', str_replace(',', '', $costo_total));
+        }
+
         $response = $this->traitStore();
         // do something after save
         $reservacion = Reservacion::find($this->crud->entry->id);
