@@ -64,7 +64,11 @@ class ReservacionCrudController extends CrudController
             'type' => 'boolean',
             'options' => [0 => 'Inactiva', 1 => 'Activa']
         ]);
-
+        $this->crud->addColumn([
+            'name' => 'costo_total',
+            'label' => 'Costo Total',
+            'type' => 'text'
+        ]);
         $this->crud->addColumn([
             'name' => 'Habitacion.numero', // The db column name
             'label' => "Habitación", // Table column heading
@@ -82,6 +86,67 @@ class ReservacionCrudController extends CrudController
             'name' => 'Promocion.nombre', // The db column name
             'label' => "Promociones", // Table column heading
          ]);
+         $this->crud->addFilter([
+            'type'  => 'date',
+            'name'  => 'fecha_entrada',
+            'label' => 'Fecha De Entrada',
+          ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                 $this->crud->addClause('whereDate', 'fecha_entrada', $value);
+            });
+            $this->crud->addFilter([
+                'type'  => 'date',
+                'name'  => 'fecha_salida',
+                'label' => 'Fecha De Salida',
+              ],
+                false,
+                function ($value) { // if the filter is active, apply these constraints
+                     $this->crud->addClause('whereDate', 'fecha_salida', $value);
+                });
+            $this->crud->addFilter([
+            'name'  => 'tipoHabitacion',
+            'type'  => 'select2',
+            'label' => 'Tipo De Habitación'
+          ], function () {
+            return [
+              1 => 'Normal',
+              2 => 'Suite',
+              3 => 'Lujo',
+            ];
+          }, function ($value) { // if the filter is active
+                $this->crud->addClause('where', 'tipo_habitacion_id', $value);
+          });
+          $this->crud->addFilter([
+            'name'  => 'status',
+            'type'  => 'select2',
+            'label' => 'Status De La Reservación'
+          ], function () {
+            return [
+              1 => 'Activa',
+              2 => 'Inactiva',
+            ];
+          }, function ($value) { // if the filter is active
+                $this->crud->addClause('where', 'status_reservacion', $value);
+          });
+          $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'costo_total',
+            'label'=> 'Costo Total'
+          ], 
+          false, 
+          function($value) { // if the filter is active
+             $this->crud->addClause('where', 'costo_total', '=', $value);
+          });
+          $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'habitacion_id',
+            'label'=> 'Habitación'
+          ], 
+          false, 
+          function($value) { // if the filter is active
+             $this->crud->addClause('where', 'habitacion_id', '=', $value);
+          });
     }
 
     protected function setupCreateOperation()
@@ -191,6 +256,7 @@ class ReservacionCrudController extends CrudController
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
 
         ]);
+        
     }
 
     protected function setupUpdateOperation()
@@ -246,7 +312,7 @@ class ReservacionCrudController extends CrudController
             $total = $tipo_habitacion->costo * ($dias === 0 ? 1 : $dias);
     
             if($promocion){
-                $total = $total * ($promocion->descuento / 100);
+                $total = $total - (($total/100) * $promocion->descuento);
             }
         }
 

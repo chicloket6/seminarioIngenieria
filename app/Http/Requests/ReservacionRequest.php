@@ -30,6 +30,7 @@ class ReservacionRequest extends FormRequest
             'fecha_entrada' => 'required',
             'fecha_salida' => 'required',
             'status_reservacion' => 'required',
+            'costo_total' => 'required',
             'habitacion_id' => 'required',
             'cliente_id' => 'required',
             'metodo_pago_id' => 'required',
