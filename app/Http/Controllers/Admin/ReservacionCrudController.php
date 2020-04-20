@@ -24,6 +24,10 @@ class ReservacionCrudController extends CrudController
         $this->crud->setModel('App\Models\Reservacion');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/reservacion');
         $this->crud->setEntityNameStrings('Reservación', 'Reservaciones');
+
+        //$this->crud->addClause('whereHas', 'habitacion', function($query){
+          //  $query->where('status_id','!=','1');
+        //});
     }
 
     protected function setupListOperation()
@@ -78,7 +82,7 @@ class ReservacionCrudController extends CrudController
         //$this->crud->setFromDb();
         $this->crud->addField([   // date_picker
             'name' => 'fecha_entrada',
-            'type' => 'date_picker',
+            'type' => 'datetime_picker',
             'label' => 'Fecha De Entrada',
             // optional:
             'date_picker_options' => [
@@ -86,11 +90,14 @@ class ReservacionCrudController extends CrudController
                'format' => 'dd-mm-yyyy',
                'language' => 'es'
             ],
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
          ]);
 
          $this->crud->addField([   // date_picker
             'name' => 'fecha_salida',
-            'type' => 'date_picker',
+            'type' => 'datetime_picker',
             'label' => 'Fecha De Salida',
             // optional:
             'date_picker_options' => [
@@ -98,6 +105,9 @@ class ReservacionCrudController extends CrudController
                'format' => 'dd-mm-yyyy',
                'language' => 'es'
             ],
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
          ]);
 
          $this->crud->addField([   // select_from_array
@@ -108,6 +118,9 @@ class ReservacionCrudController extends CrudController
             'allows_null' => false,
             'default' => '1',
             // 'allows_multiple' => true, // OPTIONAL; needs you to cast this to array in your model;
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
         $this->crud->addField([  // Select2
@@ -116,6 +129,12 @@ class ReservacionCrudController extends CrudController
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
             'attribute' => 'numero', // foreign key attribute that is shown to user
+            'options'   => (function ($query) {
+                return $query->where('status_id', '!=', '2')->get();
+            }), // force the related options to be a custom query, instead of all();
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
         $this->crud->addField([  // Select2
@@ -124,6 +143,9 @@ class ReservacionCrudController extends CrudController
             'name' => 'cliente_id', // the db column for the foreign key
             'entity' => 'Cliente', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
         $this->crud->addField([  // Select2
@@ -132,6 +154,9 @@ class ReservacionCrudController extends CrudController
             'name' => 'metodo_pago_id', // the db column for the foreign key
             'entity' => 'MetodoPago', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-4'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
         $this->crud->addField([  // Select2
@@ -140,6 +165,9 @@ class ReservacionCrudController extends CrudController
             'name' => 'promocion_id', // the db column for the foreign key
             'entity' => 'Promocion', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
         
     }

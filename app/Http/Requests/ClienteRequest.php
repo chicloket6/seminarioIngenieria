@@ -26,6 +26,7 @@ class ClienteRequest extends FormRequest
     public function rules()
     {
         return [
+            'nombre' => 'required',
             'email' => 'required|unique:clientes',
             'telefono' => 'required|digits_between:8,10'
         ];

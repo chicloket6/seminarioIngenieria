@@ -27,6 +27,9 @@ class HabitacionRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'numero' => 'required|unique:habitaciones',
+            'tipos_habitacion_id' => 'required',
+            'status_id' => 'required',
         ];
     }
 

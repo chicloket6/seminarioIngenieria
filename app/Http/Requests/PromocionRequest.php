@@ -27,7 +27,10 @@ class PromocionRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
-            'descuento' => 'numeric'
+            'nombre' => 'required|unique:promociones',
+            'fecha_inicio' => 'required',
+            'fecha_final' => 'required',
+            'descuento' => 'required|digits_between:1,100',
         ];
     }
 

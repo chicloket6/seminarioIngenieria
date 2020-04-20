@@ -27,6 +27,12 @@ class ReservacionRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'fecha_entrada' => 'required',
+            'fecha_salida' => 'required',
+            'status_reservacion' => 'required',
+            'habitacion_id' => 'required|unique:reservaciones',
+            'cliente_id' => 'required|unique:reservaciones',
+            'metodo_pago_id' => 'required',
         ];
     }
 
