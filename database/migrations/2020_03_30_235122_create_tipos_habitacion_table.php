@@ -16,6 +16,7 @@ class CreateTiposHabitacionTable extends Migration
         Schema::create('tipos_habitacion', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre');
+            $table->double('costo', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

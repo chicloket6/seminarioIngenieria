@@ -6,6 +6,15 @@ use App\Http\Requests\ReservacionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Mail;
+
+use App\Mail\ReservacionExitosa;
+use App\Models\Reservacion;
+use App\Models\Habitacion;
+use App\Models\Promocion;
+
 /**
  * Class ReservacionCrudController
  * @package App\Http\Controllers\Admin
@@ -18,6 +27,7 @@ class ReservacionCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
 
     public function setup()
     {
@@ -87,7 +97,7 @@ class ReservacionCrudController extends CrudController
             // optional:
             'date_picker_options' => [
                'todayBtn' => 'linked',
-               'format' => 'dd-mm-yyyy',
+               'format' => 'DD/MM/YYYY HH:mm',
                'language' => 'es'
             ],
             'wrapperAttributes' => [
@@ -102,7 +112,7 @@ class ReservacionCrudController extends CrudController
             // optional:
             'date_picker_options' => [
                'todayBtn' => 'linked',
-               'format' => 'dd-mm-yyyy',
+               'format' => 'DD/MM/YYYY HH:mm',
                'language' => 'es'
             ],
             'wrapperAttributes' => [
@@ -113,7 +123,7 @@ class ReservacionCrudController extends CrudController
          $this->crud->addField([   // select_from_array
             'name' => 'status_reservacion',
             'label' => "Status De La Reservación",
-            'type' => 'select_from_array',
+            'type' => 'select2_from_array',
             'options' => ['0' => 'Inactiva', '1' => 'Activa'],
             'allows_null' => false,
             'default' => '1',
@@ -169,11 +179,60 @@ class ReservacionCrudController extends CrudController
                 'class' => 'form-group col-md-6'
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
-        
+
+        $this->crud->addField([
+            'name' => 'costo_total',
+            'label' => 'Calcular Total',
+            'type' => 'calcular_total'//VISTA PERSONALIZADA, SE ENCUENTRA EN resources/views/vendor/crud/fields
+        ]);
     }
 
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function store()
+    {
+        // do something before validation, before save, before everything; for example:
+        // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
+        // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
+        // $this->crud->request->request->remove('password_confirmation');
+        // $this->crud->removeField('password_confirmation');
+        $response = $this->traitStore();
+        // do something after save
+        $reservacion = Reservacion::find($this->crud->entry->id);
+
+        if($reservacion){
+            $cliente = $reservacion->cliente;
+            Mail::to($cliente->email)->send(new ReservacionExitosa($reservacion, $cliente, backpack_user()));
+        }
+
+        return $response;
+    }
+
+    public function calcularTotalFechas(Request $request){
+        // dd($request->request); //CON ESTA LINEA VES TODO LO QUE LE HAS MANDADO
+        $fecha_entrada = $request->get('fecha_entrada');
+        $fecha_salida = $request->get('fecha_salida');
+        $habitacion = Habitacion::find($request->get('habitacion'));
+        $promocion = Promocion::find($request->get('promocion'));
+        $total = 0;
+
+        if($fecha_entrada && $fecha_salida && $habitacion){
+            $fecha_entrada = new Carbon($fecha_entrada);
+            $fecha_salida = new Carbon($fecha_salida);
+
+            $tipo_habitacion = $habitacion->tipoHabitacion;
+
+            $dias = $fecha_entrada->diffInDays($fecha_salida, false);
+            $total = $tipo_habitacion->costo * ($dias === 0 ? 1 : $dias);
+    
+            if($promocion){
+                $total = $total * ($promocion->descuento / 100);
+            }
+        }
+
+        return $total;
     }
 }

@@ -18,6 +18,7 @@ class CreateReservacionesTable extends Migration
             $table->dateTime('fecha_entrada');
             $table->dateTime('fecha_salida');
             $table->boolean('status_reservacion')->default(1);
+            $table->double('costo_total', 10, 2);
 
             $table->unsignedBigInteger('habitacion_id')->nullable();
             $table->foreign('habitacion_id')->references('id')->on('habitaciones');
