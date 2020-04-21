@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Http\Requests\PromocionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -30,6 +31,42 @@ class PromocionCrudController extends CrudController
     {
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
         $this->crud->setFromDb();
+        $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'nombre',
+            'label'=> 'Nombre'
+          ], 
+          false, 
+          function($value) { // if the filter is active
+             $this->crud->addClause('where', 'nombre', '=', $value);
+          });
+          $this->crud->addFilter([
+            'type'  => 'date',
+            'name'  => 'fecha_inicio',
+            'label' => 'Fecha De Inicio',
+          ],
+            false,
+            function ($value) { // if the filter is active, apply these constraints
+                 $this->crud->addClause('whereDate', 'fecha_inicio', $value);
+            });
+            $this->crud->addFilter([
+                'type'  => 'date',
+                'name'  => 'fecha_final',
+                'label' => 'Fecha De Fin',
+              ],
+                false,
+                function ($value) { // if the filter is active, apply these constraints
+                     $this->crud->addClause('whereDate', 'fecha_final', $value);
+                });
+                $this->crud->addFilter([
+                    'type' => 'text',
+                    'name' => 'descuento',
+                    'label'=> 'Descuento',
+                  ], 
+                  false, 
+                  function($value) { // if the filter is active
+                     $this->crud->addClause('where', 'descuento', '=', $value);
+                  });
     }
 
     protected function setupCreateOperation()
@@ -53,6 +90,13 @@ class PromocionCrudController extends CrudController
                 'name' => 'fecha_inicio',
                 'label' => "Fecha De Inicio",
                 'type' => 'datetime_picker',
+                'minDate' => Carbon::now()->toDateString(),
+                // optional:
+                'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'DD/MM/YYYY HH:mm',
+                'language' => 'es'
+                ],
                 'wrapperAttributes' => [
                     'class' => 'form-group col-md-4'
                   ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
@@ -63,6 +107,13 @@ class PromocionCrudController extends CrudController
                 'name' => 'fecha_final',
                 'label' => "Fecha De Fin",
                 'type' => 'datetime_picker',
+                'minDate' => Carbon::now()->toDateString(),
+                // optional:
+                'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'DD/MM/YYYY HH:mm',
+                'language' => 'es'
+                ],
                 'wrapperAttributes' => [
                     'class' => 'form-group col-md-4'
                   ], // change the HTML attributes for the field wrapper - mostly for resizing fields 

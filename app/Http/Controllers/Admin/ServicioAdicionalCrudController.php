@@ -30,6 +30,24 @@ class ServicioAdicionalCrudController extends CrudController
     {
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
         $this->crud->setFromDb();
+        $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'nombre',
+            'label'=> 'Nombre'
+          ], 
+          false, 
+          function($value) { // if the filter is active
+             $this->crud->addClause('where', 'nombre', '=', $value);
+          });
+          $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'costo',
+            'label'=> 'Costo'
+          ], 
+          false, 
+          function($value) { // if the filter is active
+             $this->crud->addClause('where', 'costo', '=', $value);
+          });
     }
 
     protected function setupCreateOperation()

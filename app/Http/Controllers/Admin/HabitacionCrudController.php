@@ -44,6 +44,41 @@ class HabitacionCrudController extends CrudController
             'name' => 'status.nombre', // The db column name
             'label' => "Estatus", // Table column heading
          ]);
+         $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'numero',
+            'label'=> 'Número'
+          ], 
+          false, 
+          function($value) { // if the filter is active
+             $this->crud->addClause('where', 'numero', '=', $value);
+          });
+          $this->crud->addFilter([
+            'name'  => 'tipoHabitacion',
+            'type'  => 'select2',
+            'label' => 'Tipo De Habitación'
+          ], function () {
+            return [
+              1 => 'Normal',
+              2 => 'Suite',
+              3 => 'Lujo',
+            ];
+          }, function ($value) { // if the filter is active
+                $this->crud->addClause('where', 'tipo_habitacion_id', $value);
+          });
+          $this->crud->addFilter([
+            'name'  => 'statusHabitacion',
+            'type'  => 'select2',
+            'label' => 'Status'
+          ], function () {
+            return [
+              1 => 'Disponible',
+              2 => 'No disponible',
+              3 => 'En Remodelación',
+            ];
+          }, function ($value) { // if the filter is active
+                $this->crud->addClause('where', 'status_id', $value);
+          });
     }
 
     protected function setupCreateOperation()
