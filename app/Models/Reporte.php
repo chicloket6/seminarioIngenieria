@@ -4,12 +4,10 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ServicioAdicional extends Model
+class Reporte extends Model
 {
     use CrudTrait;
-    use SoftDeletes;
 
     /*
     |--------------------------------------------------------------------------
@@ -17,7 +15,7 @@ class ServicioAdicional extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'servicios_adicional';
+    protected $table = 'reportes';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -36,9 +34,7 @@ class ServicioAdicional extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function reservaciones(){
-        return $this->belongsToMany('App\Models\SerivioAdicional', 'promocion_reservacion_servicio_adicional', 'reservacion_id', 'servicio_adicional_id');
-    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

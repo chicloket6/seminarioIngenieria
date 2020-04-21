@@ -9,7 +9,7 @@
 
 Route::group([//RUTAS PARA SUPERADMIN SOLAMENTE
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
-    'middleware' => ['web', config('backpack.base.middleware_key', 'admin'), 'roles:SuperAdmin|Gerente'],
+    'middleware' => ['web', config('backpack.base.middleware_key', 'admin'), 'role:SuperAdmin|Gerente'],
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     //CRUD (VISTAS)
@@ -24,9 +24,10 @@ Route::group([//RUTAS PARA SUPERADMIN SOLAMENTE
     //GETS
 
     //POSTS
+    
+    Route::crud('reporte', 'ReporteCrudController');
 }); // this should be the absolute last line of this file
-
-Route::group([
+Route::group([//RUTAS PARA TODOS LOS ROLES (SUPER ADMIN, GERENCIA Y RECEPCION)
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
     'namespace'  => 'App\Http\Controllers\Admin',

@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Spatie\Permission\Exceptions\UnauthorizedException;
-use Illuminate\Support\Facades\Auth;
 
 
 class RoleMiddleware
@@ -22,12 +21,9 @@ class RoleMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $roles = is_array($role)
-            ? $role
-            : explode('|', $role);
+        $roles = is_array($role) ? $role : explode('|', $role);
 
         if (!backpack_user()->hasAnyRole($roles)) {
-            // throw UnauthorizedException::forRoles($roles);
             return response()->view('errors_roles.403');
         }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReservacionServicioAdicionalTable extends Migration
+class CreatePromocionReservacionServicioAdicionalTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateReservacionServicioAdicionalTable extends Migration
      */
     public function up()
     {
-        Schema::create('reservacion_servicio_adicional', function (Blueprint $table) {
+        Schema::create('promocion_reservacion_servicio_adicional', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('reservacion_id')->nullable();
-            $table->foreign('reservacion_id')->references('id')->on('reservaciones');
-
             $table->unsignedBigInteger('servicio_adicional_id')->nullable();
-            $table->foreign('servicio_adicional_id')->references('id')->on('servicios_adicional');
+            $table->unsignedBigInteger('promocion_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -34,6 +32,6 @@ class CreateReservacionServicioAdicionalTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reservacion_servicio_adicional');
+        Schema::dropIfExists('promocion_reservacion_servicio_adicional');
     }
 }

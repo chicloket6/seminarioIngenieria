@@ -5,7 +5,7 @@
 @endphp
 
 @section('title')
-  Prohibido, su rol no permite seguir
+  Prohibido el acceso, su rol no permite seguir
 @endsection
 
 @section('description')

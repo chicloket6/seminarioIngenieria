@@ -48,6 +48,10 @@ class Reservacion extends Model
     public function promocion(){
         return $this->belongsTo('App\Models\Promocion', 'promocion_id');
     }
+
+    public function servicioAdicional(){
+        return $this->morphToMany('App\Models\SerivioAdicional', 'promocion_reservacion_servicio_adicional', 'reservacion_id', 'servicio_adicional_id');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES
