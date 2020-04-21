@@ -14,6 +14,8 @@ use App\Mail\ReservacionExitosa;
 use App\Models\Reservacion;
 use App\Models\Habitacion;
 use App\Models\Promocion;
+use \App\Models\Cliente;
+use \App\Models\MetodoPago; 
 
 /**
  * Class ReservacionCrudController
@@ -65,6 +67,7 @@ class ReservacionCrudController extends CrudController
             'label' => 'Costo Total',
             'type' => 'text'
         ]);
+        
         $this->crud->addColumn([
             'name' => 'Habitacion.numero', // The db column name
             'label' => "Habitación", // Table column heading
@@ -82,37 +85,41 @@ class ReservacionCrudController extends CrudController
             'name' => 'Promocion.nombre', // The db column name
             'label' => "Promociones", // Table column heading
          ]);
+
          $this->crud->addFilter([
             'type'  => 'date',
             'name'  => 'fecha_entrada',
             'label' => 'Fecha De Entrada',
           ],
-            false,
-            function ($value) { // if the filter is active, apply these constraints
-                 $this->crud->addClause('whereDate', 'fecha_entrada', $value);
-            });
-            $this->crud->addFilter([
-                'type'  => 'date',
-                'name'  => 'fecha_salida',
-                'label' => 'Fecha De Salida',
-              ],
-                false,
-                function ($value) { // if the filter is active, apply these constraints
-                     $this->crud->addClause('whereDate', 'fecha_salida', $value);
-                });
-            $this->crud->addFilter([
+          false,
+          function ($value) { // if the filter is active, apply these constraints
+                $this->crud->addClause('whereDate', 'fecha_entrada', $value);
+          });
+
+          $this->crud->addFilter([
+            'type'  => 'date',
+            'name'  => 'fecha_salida',
+            'label' => 'Fecha De Salida',
+          ],
+          false,
+          function ($value) { // if the filter is active, apply these constraints
+                $this->crud->addClause('whereDate', 'fecha_salida', $value);
+          });
+
+          $this->crud->addFilter([
             'name'  => 'tipoHabitacion',
             'type'  => 'select2',
             'label' => 'Tipo De Habitación'
           ], function () {
-            return [
-              1 => 'Normal',
-              2 => 'Suite',
-              3 => 'Lujo',
-            ];
+          return [
+            1 => 'Normal',
+            2 => 'Suite',
+            3 => 'Lujo',
+          ];
           }, function ($value) { // if the filter is active
                 $this->crud->addClause('where', 'tipo_habitacion_id', $value);
           });
+
           $this->crud->addFilter([
             'name'  => 'status',
             'type'  => 'select2',
@@ -125,6 +132,7 @@ class ReservacionCrudController extends CrudController
           }, function ($value) { // if the filter is active
                 $this->crud->addClause('where', 'status_reservacion', $value);
           });
+
           $this->crud->addFilter([
             'type' => 'text',
             'name' => 'costo_total',
@@ -134,6 +142,7 @@ class ReservacionCrudController extends CrudController
           function($value) { // if the filter is active
              $this->crud->addClause('where', 'costo_total', '=', $value);
           });
+
           $this->crud->addFilter([
             'type' => 'text',
             'name' => 'habitacion_id',
@@ -143,30 +152,33 @@ class ReservacionCrudController extends CrudController
           function($value) { // if the filter is active
              $this->crud->addClause('where', 'habitacion_id', '=', $value);
           });
+
           $this->crud->addFilter([
             'name' => 'cliente_id',
             'type' => 'select2',
             'label'=> 'Clientes'
           ], function() {
-              return \App\Models\Cliente::all()->pluck('nombre', 'id')->toArray();
+              return Cliente::all()->pluck('nombre', 'id')->toArray();
           }, function($value) { // if the filter is active
               $this->crud->addClause('where', 'cliente_id', $value);
           });
+
           $this->crud->addFilter([
             'name' => 'metodo_pago_id',
             'type' => 'select2',
             'label'=> 'Metodos De Pago'
           ], function() {
-              return \App\Models\MetodoPago::all()->pluck('nombre', 'id')->toArray();
+              return MetodoPago::all()->pluck('nombre', 'id')->toArray();
           }, function($value) { // if the filter is active
               $this->crud->addClause('where', 'metodo_pago_id', $value);
           });
+
           $this->crud->addFilter([
             'name' => 'promocion_id',
             'type' => 'select2',
             'label'=> 'Promociones'
           ], function() {
-              return \App\Models\Promocion::all()->pluck('nombre', 'id')->toArray();
+              return Promocion::all()->pluck('nombre', 'id')->toArray();
           }, function($value) { // if the filter is active
               $this->crud->addClause('where', 'promocion_id', $value);
           });
