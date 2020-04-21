@@ -30,7 +30,19 @@ class Reservacion extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public function getTotalGastado($number_format = false){
+        $total = $this->costo_total;
 
+        return $number_format ? number_format($total, 2) : $total;
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | bOTONES
+    |--------------------------------------------------------------------------
+    */
+    public function descargarExcelButton(){
+        return '<a href="/admin/reporte/descargar" class="btn btn-xs btn-default"><i class="fa fa-download"></i> Reporte</a>';
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

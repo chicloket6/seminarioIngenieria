@@ -22,7 +22,7 @@ Route::group([//RUTAS PARA SUPERADMIN SOLAMENTE
     Route::crud('servicioadicional', 'ServicioAdicionalCrudController');
     
     //GETS
-
+    Route::get('reporte/descargar', 'ReporteCrudController@descargarReporte');
     //POSTS
     
     Route::crud('reporte', 'ReporteCrudController');

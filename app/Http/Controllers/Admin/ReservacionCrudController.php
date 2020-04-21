@@ -34,10 +34,6 @@ class ReservacionCrudController extends CrudController
         $this->crud->setModel('App\Models\Reservacion');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/reservacion');
         $this->crud->setEntityNameStrings('Reservación', 'Reservaciones');
-
-        //$this->crud->addClause('whereHas', 'habitacion', function($query){
-          //  $query->where('status_id','!=','1');
-        //});
     }
 
     protected function setupListOperation()
