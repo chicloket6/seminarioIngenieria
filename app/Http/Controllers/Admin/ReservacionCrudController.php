@@ -147,6 +147,33 @@ class ReservacionCrudController extends CrudController
           function($value) { // if the filter is active
              $this->crud->addClause('where', 'habitacion_id', '=', $value);
           });
+          $this->crud->addFilter([
+            'name' => 'cliente_id',
+            'type' => 'select2',
+            'label'=> 'Clientes'
+          ], function() {
+              return \App\Models\Cliente::all()->pluck('nombre', 'id')->toArray();
+          }, function($value) { // if the filter is active
+              $this->crud->addClause('where', 'cliente_id', $value);
+          });
+          $this->crud->addFilter([
+            'name' => 'metodo_pago_id',
+            'type' => 'select2',
+            'label'=> 'Metodos De Pago'
+          ], function() {
+              return \App\Models\MetodoPago::all()->pluck('nombre', 'id')->toArray();
+          }, function($value) { // if the filter is active
+              $this->crud->addClause('where', 'metodo_pago_id', $value);
+          });
+          $this->crud->addFilter([
+            'name' => 'promocion_id',
+            'type' => 'select2',
+            'label'=> 'Promociones'
+          ], function() {
+              return \App\Models\Promocion::all()->pluck('nombre', 'id')->toArray();
+          }, function($value) { // if the filter is active
+              $this->crud->addClause('where', 'promocion_id', $value);
+          });
     }
 
     protected function setupCreateOperation()
