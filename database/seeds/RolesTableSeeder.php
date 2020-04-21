@@ -14,12 +14,12 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         $roles = [
-            [
-                'name' => 'SuperAdmin',
-                'guard_name' => 'web',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ],
+            // [
+            //     'name' => 'SuperAdmin',
+            //     'guard_name' => 'web',
+            //     'created_at' => Carbon::now(),
+            //     'updated_at' => Carbon::now()
+            // ],
             [
                 'name' => 'Gerente',
                 'guard_name' => 'web',

@@ -7,7 +7,7 @@
 // Routes you generate using Backpack\Generators will be placed here.
 
 
-Route::group([//RUTAS PARA SUPERADMIN SOLAMENTE
+Route::group([//RUTAS PARA SUPERADMIN Y GERENCIA SOLAMENTE
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => ['web', config('backpack.base.middleware_key', 'admin'), 'role:SuperAdmin|Gerente'],
     'namespace'  => 'App\Http\Controllers\Admin',
@@ -23,10 +23,12 @@ Route::group([//RUTAS PARA SUPERADMIN SOLAMENTE
     
     //GETS
     Route::get('reporte/descargar', 'ReporteCrudController@descargarReporte');
-    //POSTS
     
+    //POSTS
     Route::crud('reporte', 'ReporteCrudController');
-}); // this should be the absolute last line of this file
+
+});
+
 Route::group([//RUTAS PARA TODOS LOS ROLES (SUPER ADMIN, GERENCIA Y RECEPCION)
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
@@ -35,10 +37,10 @@ Route::group([//RUTAS PARA TODOS LOS ROLES (SUPER ADMIN, GERENCIA Y RECEPCION)
     //CRUD (VISTAS)
     Route::crud('cliente', 'ClienteCrudController');
     Route::crud('reservacion', 'ReservacionCrudController');
-    Route::crud('servicioadicional', 'ServicioAdicionalCrudController');
     
     //GETS
 
     //POSTS
     Route::post('Reservacion/calcularTotalFechas', 'ReservacionCrudController@calcularTotalFechas');
+
 }); // this should be the absolute last line of this file

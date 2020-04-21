@@ -19,12 +19,12 @@ class RolesUsuarioTableSeeder extends Seeder
                 'model_id' => 1,
             ],
             [
-                'role_id' => 3,
+                'role_id' => 2,
                 'model_type' => 'App\Models\BackpackUser',
                 'model_id' => 2,
             ],
             [
-                'role_id' => 3,
+                'role_id' => 2,
                 'model_type' => 'App\Models\BackpackUser',
                 'model_id' => 3,
             ]

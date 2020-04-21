@@ -50,7 +50,7 @@ class ReservacionCrudController extends CrudController
         }
      ]);
 
-    $this->crud->addColumn([
+      $this->crud->addColumn([
         'name' => 'habitacion.numero', // The db column name
         'label' => "Habitación", // Table column heading
         'searchLogic' => function ($query, $column, $searchTerm) {
@@ -80,18 +80,18 @@ class ReservacionCrudController extends CrudController
         'label' => 'Status De La Reservación',
         'type' => 'boolean',
         'options' => [0 => 'Inactiva', 1 => 'Activa'],
-    ]);
+      ]);
 
-    $this->crud->addColumn([
-        'name' => 'costo_total',
-        'label' => 'Costo Total',
-        'type' => 'text',
-        'searchLogic' => function ($query, $column, $searchTerm) {
-            $query->orWhere('costo_total', 'like', '%'.$searchTerm.'%');
-        }
-    ]);
+      $this->crud->addColumn([
+          'name' => 'costo_total',
+          'label' => 'Costo Total',
+          'type' => 'text',
+          'searchLogic' => function ($query, $column, $searchTerm) {
+              $query->orWhere('costo_total', 'like', '%'.$searchTerm.'%');
+          }
+      ]);
 
-     $this->crud->addColumn([
+      $this->crud->addColumn([
         'name' => 'metodoPago.nombre', // The db column name
         'label' => "Métodos De Pago", // Table column heading
         'searchLogic' => function ($query, $column, $searchTerm) {
@@ -99,9 +99,9 @@ class ReservacionCrudController extends CrudController
                 $q->where('nombre', 'like', '%'.$searchTerm.'%');
             });
         }
-     ]);
+      ]);
 
-     $this->crud->addColumn([
+      $this->crud->addColumn([
         'name' => 'promocion.nombre', // The db column name
         'label' => "Promociones", // Table column heading
         'searchLogic' => function ($query, $column, $searchTerm) {
@@ -109,11 +109,11 @@ class ReservacionCrudController extends CrudController
                 $q->where('nombre', 'like', '%'.$searchTerm.'%');
             });
         }
-     ]);
+      ]);
 
 
 
-     $this->crud->addFilter([
+      $this->crud->addFilter([
         'type'  => 'date',
         'name'  => 'fecha_entrada',
         'label' => 'Fecha De Entrada',
@@ -374,7 +374,7 @@ class ReservacionCrudController extends CrudController
             $total = $tipo_habitacion->costo * ($dias === 0 ? 1 : $dias);
     
             if($promocion){
-                $total = $total - (($total/100) * $promocion->descuento);
+                $total -= (($total / 100) * $promocion->descuento);
             }
         }
 
