@@ -7,9 +7,9 @@
 // Routes you generate using Backpack\Generators will be placed here.
 
 
-Route::group([//RUTAS PARA SUPERADMIN Y GERENCIA SOLAMENTE
+Route::group([//RUTAS PARA GERENCIA SOLAMENTE
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
-    'middleware' => ['web', config('backpack.base.middleware_key', 'admin'), 'role:SuperAdmin|Gerente'],
+    'middleware' => ['web', config('backpack.base.middleware_key', 'admin'), 'role:Gerente'],
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     //CRUD (VISTAS)
@@ -29,7 +29,7 @@ Route::group([//RUTAS PARA SUPERADMIN Y GERENCIA SOLAMENTE
 
 });
 
-Route::group([//RUTAS PARA TODOS LOS ROLES (SUPER ADMIN, GERENCIA Y RECEPCION)
+Route::group([//RUTAS PARA TODOS LOS ROLES (GERENCIA Y RECEPCION)
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
     'namespace'  => 'App\Http\Controllers\Admin',

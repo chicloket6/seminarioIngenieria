@@ -38,7 +38,10 @@ class ReporteCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->removeAllButtons();
-        $this->crud->addButtonFromModelFunction('top', 'descargarExcel', 'descargarExcelButton', 'end');
+
+        if(backpack_user()->hasRole('Gerente')){
+            $this->crud->addButtonFromModelFunction('top', 'descargarExcel', 'descargarExcelButton', 'end');
+        }
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
         // $this->crud->setFromDb();
         

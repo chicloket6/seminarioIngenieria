@@ -1,11 +1,7 @@
-<!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('cliente') }}'><i class='nav-icon fa fa-user-tie'></i> Clientes</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('reservacion') }}'><i class='nav-icon fa fa-concierge-bell'></i> Reservaciones</a></li>
 
-
-
-
-@if(backpack_user()->hasRole('SuperAdmin') || backpack_user()->hasRole('Gerente'))
+@if(backpack_user()->hasRole('Gerente'))
 	<li class='nav-item'><a class='nav-link' href='{{ backpack_url('habitacion') }}'><i class='nav-icon fa fa-bed'></i> Habitaciones</a></li>
 	<li class='nav-item'><a class='nav-link' href='{{ backpack_url('promocion') }}'><i class='nav-icon fa fa-gift'></i> Promociones</a></li>
 	<li class='nav-item'><a class='nav-link' href='{{ backpack_url('reporte') }}'><i class='nav-icon fa fa-file-excel'></i> Reportes</a></li>
