@@ -6,6 +6,7 @@ use App\Http\Requests\ReservacionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Mail;
@@ -17,6 +18,7 @@ use App\Models\Habitacion;
 use App\Models\Promocion;
 use \App\Models\Cliente;
 use \App\Models\MetodoPago; 
+
 
 /**
  * Class ReservacionCrudController
@@ -442,11 +444,24 @@ class ReservacionCrudController extends CrudController
         $fecha_entrada = new Carbon($fecha_entrada);
         $fecha_salida = new Carbon($fecha_salida);
 
-        return Habitacion::whereHas('reservaciones', function($query) use ($fecha_entrada, $fecha_salida, $habitacion){
-          dd($query);
-          $query->whereDate('fecha_entrada', '!=', $fecha_entrada)->whereDate('fecha_salida', '!=', $fecha_salida)->where('habitacion_id', $habitacion->id)->where('status_reservacion', 1)->get();
-          
-        })->orWhere('id','!=', 0);
+        $reservaciones = Reservacion::whereDate('reservaciones.fecha_entrada', '!=', $fecha_entrada)->whereDate('reservaciones.fecha_salida', '!=', $fecha_salida)->where('reservaciones.status_reservacion', 1)->get();
+        $habitaciones = array();
+
+        if(count($reservaciones) > 0){
+          foreach($reservaciones as $reservacion){
+            if($reservacion->habitacion){
+              $habitaciones[] = $reservacion->habitacion;
+            }
+          }
+        }
+        else{
+          $habitaciones = Habitacion::all();
+        }
+
+        return $habitaciones;
+        // return Habitacion::whereHas('reservaciones', function(Builder $query) use ($fecha_entrada, $fecha_salida, $habitacion){
+        //   $query->whereDate('reservaciones.fecha_entrada', '!=', $fecha_entrada)->whereDate('reservaciones.fecha_salida', '!=', $fecha_salida)->where('reservaciones.status_reservacion', 1)->get();
+        // })->orWhere('id','!=', 0);
       }
 
       return [];
