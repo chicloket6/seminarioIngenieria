@@ -72,7 +72,6 @@ if (isset($field['value']) && ($field['value'] instanceof \Carbon\CarbonInterfac
 
                 $customConfig.locale = $customConfig['language'];
                 delete($customConfig['language']);
-                console.log($customConfig);
                 var $picker = $fake.datetimepicker($customConfig);
 
                 // $fake.on('keydown', function(e){

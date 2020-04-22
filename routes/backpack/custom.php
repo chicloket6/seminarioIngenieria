@@ -41,6 +41,5 @@ Route::group([//RUTAS PARA TODOS LOS ROLES (GERENCIA Y RECEPCION)
     //GETS
 
     //POSTS
-    Route::post('Reservacion/calcularTotalFechas', 'ReservacionCrudController@calcularTotalFechas');
-
+    Route::post('reservacion/calcularTotalFechas', 'ReservacionCrudController@calcularTotalFechas');
 }); // this should be the absolute last line of this file

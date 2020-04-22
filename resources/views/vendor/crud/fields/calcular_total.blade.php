@@ -48,7 +48,7 @@
       
           function calcularTotalPorFechas(habitacion, fecha_entrada, fecha_salida, promocion){
             $.ajax({
-                url: '/admin/Reservacion/calcularTotalFechas',
+                url: '/admin/reservacion/calcularTotalFechas',
                 type: 'POST',
                 data: {habitacion: habitacion, fecha_entrada: fecha_entrada, fecha_salida: fecha_salida, promocion: promocion },
                 success: function(result){

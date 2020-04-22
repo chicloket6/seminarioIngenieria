@@ -62,4 +62,8 @@ class Habitacion extends Model
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+
+    public function getNumeroAttribute(){
+        return $this->tipoHabitacion ? ($this->attributes['numero'] . ' - ' . $this->tipoHabitacion->nombre) : $this->attributes['numero'];
+    }
 }
