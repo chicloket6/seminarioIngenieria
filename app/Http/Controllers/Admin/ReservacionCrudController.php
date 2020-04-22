@@ -268,7 +268,7 @@ class ReservacionCrudController extends CrudController
 
         $this->crud->addField([  // Select2
             'label' => "# Habitación - Tipo",
-            'type' => 'habitaciones',
+            'type' => 'select2',
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
             'attribute' => 'numero', // foreign key attribute that is shown to user

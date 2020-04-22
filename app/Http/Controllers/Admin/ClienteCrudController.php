@@ -37,7 +37,7 @@ class ClienteCrudController extends CrudController
           ], 
           false, 
           function($value) { // if the filter is active
-             $this->crud->addClause('where', 'nombre', '=', $value);
+             $this->crud->addClause('where', 'nombre', 'like', '%'.$value.'%');
           });
           $this->crud->addFilter([
             'type' => 'text',
@@ -46,7 +46,7 @@ class ClienteCrudController extends CrudController
           ], 
           false, 
           function($value) { // if the filter is active
-             $this->crud->addClause('where', 'email', '=', $value);
+             $this->crud->addClause('where', 'email', 'like', '%'.$value.'%');
           });
           $this->crud->addFilter([
             'type' => 'text',
@@ -55,7 +55,7 @@ class ClienteCrudController extends CrudController
           ], 
           false, 
           function($value) { // if the filter is active
-             $this->crud->addClause('where', 'telefono', '=', $value);
+             $this->crud->addClause('where', 'telefono', 'like', '%'.$value.'%');
           });
     }
 
