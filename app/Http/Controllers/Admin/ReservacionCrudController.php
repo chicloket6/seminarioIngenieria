@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Mail;
 
 use App\Mail\ReservacionExitosa;
+use App\Mail\CambioReservacion;
 use App\Models\Reservacion;
 use App\Models\Habitacion;
 use App\Models\Promocion;
@@ -30,6 +31,7 @@ class ReservacionCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
 
     public function setup()
     {
@@ -314,9 +316,11 @@ class ReservacionCrudController extends CrudController
             'label' => 'Calcular Total',
             'type' => 'calcular_total',//VISTA PERSONALIZADA, SE ENCUENTRA EN resources/views/vendor/crud/fields
             'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
-              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-
+              'class' => 'form-group col-md-4'
+            ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            'attributes' => [
+              'readonly' => 'readonly',
+            ],
         ]);
         
     }
@@ -338,11 +342,6 @@ class ReservacionCrudController extends CrudController
         // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
         // $this->crud->request->request->remove('password_confirmation');
         // $this->crud->removeField('password_confirmation');
-        $costo_total = $this->crud->request->request->get('costo_total');
-
-        if($costo_total){
-            $this->crud->request->request->set('costo_total', str_replace(',', '', $costo_total));
-        }
 
         $response = $this->traitStore();
         // do something after save
@@ -351,6 +350,57 @@ class ReservacionCrudController extends CrudController
         if($reservacion){
             $cliente = $reservacion->cliente;
             Mail::to($cliente->email)->send(new ReservacionExitosa($reservacion, $cliente, backpack_user()));
+        }
+
+        return $response;
+    }
+
+    public function update()
+    {
+        $reservacion = Reservacion::find($this->crud->request->id);
+        $fecha_entrada = $this->crud->request->request->get('fecha_entrada');
+        $fecha_salida = $this->crud->request->request->get('fecha_salida');
+        $habitacion = $this->crud->request->request->get('habitacion_id');
+        $costo_total = $this->crud->request->request->get('costo_total');
+        $metodo_pago = $this->crud->request->request->get('metodo_pago_id');
+
+        if($costo_total){
+          $costo_total = str_replace(',', '', $costo_total);
+            $this->crud->request->request->set('costo_total', $costo_total);
+        }
+
+        $cambios = array();
+        
+        if($fecha_entrada && $reservacion->fecha_entrada != $fecha_entrada){
+          $cambios['Fecha de entrada: ']= 'Cambió de ' . $reservacion->fecha_entrada . ' a ' . $fecha_entrada;
+        }
+
+        if($fecha_salida && $reservacion->fecha_salida != $fecha_salida){
+          $cambios['Fecha de salida: '] = 'Cambió de ' . $reservacion->fecha_salida . ' a ' . $fecha_salida;
+        }
+
+        if($habitacion && $reservacion->habitacion_id != $habitacion && $reservacion->habitacion){
+          $cambios['# Habitación: '] = 'Cambió de ' . $reservacion->habitacion->numero . ' a ' . Habitacion::find($habitacion)->numero;
+        }
+
+        if($metodo_pago && $reservacion->metodo_pago_id != $metodo_pago && $reservacion->metodoPago){
+          $cambios['Método de pago: '] = 'Cambió de ' . $reservacion->metodoPago->nombre . ' a ' . MetodoPago::find($metodo_pago)->nombre;
+        }
+
+        if($costo_total && $reservacion->costo_total && $reservacion->costo_total != $costo_total){
+          $cambios['Costo total: '] = 'Cambió de ' . number_format($reservacion->costo_total, 2) . ' a ' . number_format($costo_total, 2);
+        }
+        // do something before validation, before save, before everything; for example:
+        // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
+        // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
+        // $this->crud->request->request->remove('password_confirmation');
+        // $this->crud->removeField('password_confirmation');
+        $response = $this->traitUpdate();
+        // do something after save
+
+        if(count($cambios) > 0 && $reservacion && $reservacion->cliente){
+          $cliente = $reservacion->cliente;
+          Mail::to($cliente->email)->send(new CambioReservacion($reservacion, $cliente, backpack_user(), $cambios));
         }
 
         return $response;
