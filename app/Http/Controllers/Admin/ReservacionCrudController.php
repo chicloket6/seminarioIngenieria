@@ -251,22 +251,22 @@ class ReservacionCrudController extends CrudController
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
          ]);
 
-         $this->crud->addField([   // select_from_array
-            'name' => 'status_reservacion',
-            'label' => "Status De La Reservación",
-            'type' => 'select2_from_array',
-            'options' => ['0' => 'Inactiva', '1' => 'Activa'],
-            'allows_null' => false,
-            'default' => '1',
-            // 'allows_multiple' => true, // OPTIONAL; needs you to cast this to array in your model;
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
-              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-        ]);
+        //  $this->crud->addField([   // select_from_array
+        //     'name' => 'status_reservacion',
+        //     'label' => "Status De La Reservación",
+        //     'type' => 'select2_from_array',
+        //     'options' => ['0' => 'Inactiva', '1' => 'Activa'],
+        //     'allows_null' => false,
+        //     'default' => '1',
+        //     // 'allows_multiple' => true, // OPTIONAL; needs you to cast this to array in your model;
+        //     'wrapperAttributes' => [
+        //         'class' => 'form-group col-md-4'
+        //       ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+        // ]);
 
         $this->crud->addField([  // Select2
             'label' => "# Habitación - Tipo",
-            'type' => 'select2',
+            'type' => 'habitaciones',
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
             'attribute' => 'numero', // foreign key attribute that is shown to user
@@ -337,6 +337,7 @@ class ReservacionCrudController extends CrudController
         if($costo_total){
             $this->crud->request->request->set('costo_total', str_replace(',', '', $costo_total));
         }
+        $this->crud->request->request->set('status_reservacion', 1);
         // do something before validation, before save, before everything; for example:
         // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
         // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
@@ -429,5 +430,25 @@ class ReservacionCrudController extends CrudController
         }
 
         return $total;
+    }
+
+    public function obtenerDisponibilidadHabitaciones(Request $request){
+
+      $fecha_entrada = $request->get('fecha_entrada');
+      $fecha_salida = $request->get('fecha_salida');
+      $habitacion = Habitacion::find($request->get('habitacion'));
+
+      if($fecha_entrada && $fecha_salida && $habitacion){
+        $fecha_entrada = new Carbon($fecha_entrada);
+        $fecha_salida = new Carbon($fecha_salida);
+
+        return Habitacion::whereHas('reservaciones', function($query) use ($fecha_entrada, $fecha_salida, $habitacion){
+          dd($query);
+          $query->whereDate('fecha_entrada', '!=', $fecha_entrada)->whereDate('fecha_salida', '!=', $fecha_salida)->where('habitacion_id', $habitacion->id)->where('status_reservacion', 1)->get();
+          
+        })->orWhere('id','!=', 0);
+      }
+
+      return [];
     }
 }

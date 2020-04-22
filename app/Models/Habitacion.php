@@ -41,6 +41,10 @@ class Habitacion extends Model
         return $this->belongsTo('App\Models\TipoHabitacion', 'tipo_habitacion_id');
     }
 
+    public function reservaciones(){
+        return $this->hasMany('App\Models\Reservacion', 'habitacion_id');
+    }
+
     public function status(){
         return $this->belongsTo('App\Models\StatusHabitacion', 'status_id');
     }
