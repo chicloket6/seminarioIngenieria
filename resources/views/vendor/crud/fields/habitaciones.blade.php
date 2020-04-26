@@ -89,8 +89,8 @@
                     type: 'POST',
                     data: {habitacion: hab, fecha_entrada: fecha_entrada, fecha_salida: fecha_salida},
                     success: function(result){
-                        console.log('exito: ' + result);
-                        console.log(habitacion);
+                        // console.log('exito: ' + result);
+                        // console.log(habitacion);
                         habitacion[0].options.length = 0;
                         let opciones = [];
                         for (var i = 0; i < result.length; i++) {
