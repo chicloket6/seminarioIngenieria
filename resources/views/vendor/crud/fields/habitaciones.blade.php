@@ -83,14 +83,24 @@
             obtenerDisponibilidadHabitaciones(habitacion.val(), fecha_entrada.val(), fecha_salida.val());
             }
         
-            function obtenerDisponibilidadHabitaciones(habitacion, fecha_entrada, fecha_salida){
+            function obtenerDisponibilidadHabitaciones(hab, fecha_entrada, fecha_salida){
                 $.ajax({
                     url: '/admin/reservacion/obtenerDisponibilidadHabitaciones',
                     type: 'POST',
-                    data: {habitacion: habitacion, fecha_entrada: fecha_entrada, fecha_salida: fecha_salida},
+                    data: {habitacion: hab, fecha_entrada: fecha_entrada, fecha_salida: fecha_salida},
                     success: function(result){
                         console.log('exito: ' + result);
-                        
+                        console.log(habitacion);
+                        habitacion[0].options.length = 0;
+                        let opciones = [];
+                        for (var i = 0; i < result.length; i++) {
+                            opciones.push("<option value='" + result[i].id + "'>" + result[i].numero + "</option>");
+                        }
+
+                        for(var i = 0; i < opciones.length; i++){
+                            habitacion.append(opciones[i]);
+                        }
+                            
                     },
                     error: function(result){
                         console.log('error: ' + result);
