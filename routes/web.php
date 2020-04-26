@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return redirect('admin');
 });
+
+Route::get('promociones-vigentes', '\App\Http\Controllers\Admin\PromocionCrudController@promocionesVigentes');
+
+

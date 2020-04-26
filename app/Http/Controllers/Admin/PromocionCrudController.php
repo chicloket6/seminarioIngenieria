@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Http\Requests\PromocionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\Promocion;
 
 /**
  * Class PromocionCrudController
@@ -134,5 +135,9 @@ class PromocionCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function promocionesVigentes(){
+        return Promocion::whereDate('fecha_inicio', '>=', Carbon::now())->get();
     }
 }
