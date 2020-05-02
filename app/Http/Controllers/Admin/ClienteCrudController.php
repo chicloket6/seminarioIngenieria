@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ClienteRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Http\Request;
+
+use App\Models\ImagenPerfil;
 
 /**
  * Class ClienteCrudController
@@ -100,5 +103,29 @@ class ClienteCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function cambiarImagenPerfil(Request $request){
+        if($request->has('imagen')){
+            $file = $request->file('imagen');
+            $nombre = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $disk = 'publicSystem';
+
+            $ruta = $file->storeAs('imagenesPerfil', $nombre, $disk);
+
+            if(backpack_user()->imagenPerfil){
+                backpack_user()->imagenPerfil->ruta = $ruta;
+                backpack_user()->imagenPerfil->save();
+            }
+            else{
+                $imagen = new ImagenPerfil();
+                $imagen->ruta = $ruta;
+                $imagen->user_id = backpack_user()->id;
+                $imagen->save();
+            }
+            
+            return redirect()->back();
+        }
+        return redirect()->back()->withErrors(['Algo salió mal y no se pudo cambiar la imagen de perfil, inténtelo nuevamente']);
     }
 }

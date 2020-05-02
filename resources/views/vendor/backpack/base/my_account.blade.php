@@ -35,8 +35,6 @@
         </div>
         @endif
 
-        <h5>asdasdasdasd</h5>
-
         @if ($errors->count())
         <div class="col-lg-8">
             <div class="alert alert-danger">
