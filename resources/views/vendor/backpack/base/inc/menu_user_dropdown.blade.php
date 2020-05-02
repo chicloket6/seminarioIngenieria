@@ -17,7 +17,7 @@
             </div>
         </form>
         <div class="w-100 text-center">
-          <img src="https://via.placeholder.com/200x200?text=Vista+Previa" id="preview" class="img-thumbnail">
+          <img src="{{ backpack_user()->imagenPerfil ? url(backpack_user()->imagenPerfil->ruta) : 'https://via.placeholder.com/200x200?text=Vista+Previa' }}" id="preview" class="img-thumbnail">
         </div>
         <button type="button" id="aceptarCambioImagen" class="mt-2 btn btn-success">Aceptar</button>
     </div>
