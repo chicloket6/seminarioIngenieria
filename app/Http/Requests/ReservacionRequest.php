@@ -29,7 +29,7 @@ class ReservacionRequest extends FormRequest
             // 'name' => 'required|min:5|max:255'
             'fecha_entrada' => 'required',
             'fecha_salida' => 'required',
-            'status_reservacion' => 'required',
+            // 'status_reservacion' => 'required',
             'costo_total' => 'required',
             'habitacion_id' => 'required',
             'cliente_id' => 'required',

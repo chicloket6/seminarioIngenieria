@@ -40,10 +40,16 @@ class ReservacionCrudController extends CrudController
         $this->crud->setModel('App\Models\Reservacion');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/reservacion');
         $this->crud->setEntityNameStrings('Reservación', 'Reservaciones');
+        $this->crud->setEditView('/vendor/crud/edit_reservacion');
+        $this->crud->setCreateView('/vendor/crud/create_reservacion');
     }
 
     protected function setupListOperation()
     {
+      // $this->crud->removeButton('update');
+      // $this->crud->addButtonFromModelFunction('line', 'editar', 'editarButton', 'end');
+      
+
       $this->crud->addColumn([
         'name' => 'cliente.nombre', // The db column name
         'label' => "Cliente", // Table column heading
@@ -219,52 +225,18 @@ class ReservacionCrudController extends CrudController
     {
         $this->crud->setValidation(ReservacionRequest::class);
 
-        // TODO: remove setFromDb() and manually define Fields
-        //$this->crud->setFromDb();
-        $this->crud->addField([   // date_picker
-            'name' => 'fecha_entrada',
-            'type' => 'datetime_picker',
-            'label' => 'Fecha De Entrada',
-            'minDate' => Carbon::now()->toDateString(),
-            // optional:
-            'date_picker_options' => [
-               'todayBtn' => 'linked',
-               'format' => 'DD/MM/YYYY HH:mm',
-               'language' => 'es'
-            ],
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
-              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-         ]);
-
-         $this->crud->addField([   // date_picker
-            'name' => 'fecha_salida',
-            'type' => 'datetime_picker',
-            'label' => 'Fecha De Salida',
-            'minDate' => Carbon::now()->toDateString(),
-            // optional:
-            'date_picker_options' => [
-               'todayBtn' => 'linked',
-               'format' => 'DD/MM/YYYY HH:mm',
-               'language' => 'es'
-            ],
-            'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
-              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-         ]);
-
-        //  $this->crud->addField([   // select_from_array
-        //     'name' => 'status_reservacion',
-        //     'label' => "Status De La Reservación",
-        //     'type' => 'select2_from_array',
-        //     'options' => ['0' => 'Inactiva', '1' => 'Activa'],
-        //     'allows_null' => false,
-        //     'default' => '1',
-        //     // 'allows_multiple' => true, // OPTIONAL; needs you to cast this to array in your model;
-        //     'wrapperAttributes' => [
-        //         'class' => 'form-group col-md-4'
-        //       ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-        // ]);
+        $this->crud->addField([   // date_range
+          'name' => ['fecha_entrada', 'fecha_salida'], // db columns for start_date & end_date
+          'label' => 'Tiempo de estadía',
+          'type' => 'date_range_reservacion',
+          'default' => [Carbon::now(), Carbon::now()->addDays(7)], // default values for start_date & end_date
+          // OPTIONALS
+          'date_range_options' => [
+              // options sent to daterangepicker.js
+              'timePicker' => true,
+              'locale' => ['format' => 'DD/MM/YYYY HH:mm'],
+          ]
+      ]);
 
         $this->crud->addField([  // Select2
             'label' => "# Habitación - Tipo",
@@ -273,6 +245,7 @@ class ReservacionCrudController extends CrudController
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
             'attribute' => 'numero', // foreign key attribute that is shown to user
             'options'   => (function ($query) {
+              // return [];
                 return $query->where('status_id', '!=', '2')->with('tipoHabitacion')->get();
             }), // force the related options to be a custom query, instead of all();
             'wrapperAttributes' => [
@@ -315,8 +288,8 @@ class ReservacionCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'costo_total',
-            'label' => 'Calcular Total',
-            'type' => 'calcular_total',//VISTA PERSONALIZADA, SE ENCUENTRA EN resources/views/vendor/crud/fields
+            'label' => 'Total',
+            'type' => 'text',
             'wrapperAttributes' => [
               'class' => 'form-group col-md-4'
             ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
@@ -410,7 +383,6 @@ class ReservacionCrudController extends CrudController
     }
 
     public function calcularTotalFechas(Request $request){
-        // dd($request->request); //CON ESTA LINEA VES TODO LO QUE LE HAS MANDADO
         $fecha_entrada = $request->get('fecha_entrada');
         $fecha_salida = $request->get('fecha_salida');
         $habitacion = Habitacion::find($request->get('habitacion'));
@@ -434,34 +406,21 @@ class ReservacionCrudController extends CrudController
         return $total;
     }
 
-    public function obtenerDisponibilidadHabitaciones(Request $request){
+    public function habitacionesDisponibles(Request $request){
 
       $fecha_entrada = $request->get('fecha_entrada');
       $fecha_salida = $request->get('fecha_salida');
-      $habitacion = Habitacion::find($request->get('habitacion'));
 
-      if($fecha_entrada && $fecha_salida && $habitacion){
+      if($fecha_entrada && $fecha_salida){
         $fecha_entrada = new Carbon($fecha_entrada);
         $fecha_salida = new Carbon($fecha_salida);
+        $fecha_entrada->addHours(3);
 
-        $reservaciones = Reservacion::whereDate('reservaciones.fecha_entrada', '!=', $fecha_entrada)->whereDate('reservaciones.fecha_salida', '!=', $fecha_salida)->where('reservaciones.status_reservacion', 1)->get();
-        $habitaciones = array();
-
-        if(count($reservaciones) > 0){
-          foreach($reservaciones as $reservacion){
-            if($reservacion->habitacion){
-              $habitaciones[] = $reservacion->habitacion;
-            }
-          }
-        }
-        else{
-          $habitaciones = Habitacion::all();
-        }
-
-        return $habitaciones;
-        // return Habitacion::whereHas('reservaciones', function(Builder $query) use ($fecha_entrada, $fecha_salida, $habitacion){
-        //   $query->whereDate('reservaciones.fecha_entrada', '!=', $fecha_entrada)->whereDate('reservaciones.fecha_salida', '!=', $fecha_salida)->where('reservaciones.status_reservacion', 1)->get();
-        // })->orWhere('id','!=', 0);
+        return Habitacion::where('status_id', 1)->where(function ($query) use ($fecha_entrada, $fecha_salida){
+          $query->whereHas('reservaciones', function($q) use ($fecha_entrada, $fecha_salida){
+            $q->whereDate('fecha_salida', '<=', $fecha_entrada);
+          })->orWhere('id', '!=', 0);
+        })->get();
       }
 
       return [];

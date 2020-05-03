@@ -42,6 +42,7 @@ Route::group([//RUTAS PARA TODOS LOS ROLES (GERENCIA Y RECEPCION)
 
     //POSTS
     Route::post('reservacion/calcularTotalFechas', 'ReservacionCrudController@calcularTotalFechas');
+    Route::post('reservacion/habitacionesDisponibles', 'ReservacionCrudController@habitacionesDisponibles');
     Route::post('reservacion/obtenerDisponibilidadHabitaciones', 'ReservacionCrudController@obtenerDisponibilidadHabitaciones');
     Route::post('cambiar-imagen-perfil', 'ClienteCrudController@cambiarImagenPerfil');
 }); // this should be the absolute last line of this file
