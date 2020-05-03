@@ -121,8 +121,6 @@ class ReservacionCrudController extends CrudController
         }
       ]);
 
-
-
       $this->crud->addFilter([
         'type'  => 'date',
         'name'  => 'fecha_entrada',
@@ -177,7 +175,7 @@ class ReservacionCrudController extends CrudController
       ], 
       false, 
       function($value) { // if the filter is active
-         $this->crud->addClause('where', 'costo_total', '=', $value);
+         $this->crud->addClause('where', 'costo_total', 'like', '%'.$value.'%');
       });
 
       $this->crud->addFilter([
@@ -187,7 +185,7 @@ class ReservacionCrudController extends CrudController
       ], 
       false, 
       function($value) { // if the filter is active
-         $this->crud->addClause('where', 'habitacion_id', '=', $value);
+         $this->crud->addClause('where', 'habitacion_id', 'like', '%'.$value.'%');
       });
 
       $this->crud->addFilter([
@@ -197,7 +195,7 @@ class ReservacionCrudController extends CrudController
       ], function() {
           return Cliente::all()->pluck('nombre', 'id')->toArray();
       }, function($value) { // if the filter is active
-          $this->crud->addClause('where', 'cliente_id', $value);
+          $this->crud->addClause('where', 'cliente_id', 'like', '%'.$value.'%');
       });
 
       $this->crud->addFilter([

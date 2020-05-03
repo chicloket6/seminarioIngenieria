@@ -36,38 +36,41 @@ class PromocionCrudController extends CrudController
             'type' => 'text',
             'name' => 'nombre',
             'label'=> 'Nombre'
-          ], 
-          false, 
-          function($value) { // if the filter is active
-             $this->crud->addClause('where', 'nombre', '=', $value);
-          });
-          $this->crud->addFilter([
+        ], 
+        false, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'nombre', 'like', '%'.$value.'%');
+        });
+
+        $this->crud->addFilter([
             'type'  => 'date',
             'name'  => 'fecha_inicio',
             'label' => 'Fecha De Inicio',
-          ],
-            false,
-            function ($value) { // if the filter is active, apply these constraints
-                 $this->crud->addClause('whereDate', 'fecha_inicio', $value);
-            });
-            $this->crud->addFilter([
-                'type'  => 'date',
-                'name'  => 'fecha_final',
-                'label' => 'Fecha De Fin',
-              ],
-                false,
-                function ($value) { // if the filter is active, apply these constraints
-                     $this->crud->addClause('whereDate', 'fecha_final', $value);
-                });
-                $this->crud->addFilter([
-                    'type' => 'text',
-                    'name' => 'descuento',
-                    'label'=> 'Descuento',
-                  ], 
-                  false, 
-                  function($value) { // if the filter is active
-                     $this->crud->addClause('where', 'descuento', '=', $value);
-                  });
+        ],
+        false,
+        function ($value) { // if the filter is active, apply these constraints
+            $this->crud->addClause('whereDate', 'fecha_inicio', $value);
+        });
+
+        $this->crud->addFilter([
+            'type'  => 'date',
+            'name'  => 'fecha_final',
+            'label' => 'Fecha De Fin',
+        ],
+        false,
+        function ($value) { // if the filter is active, apply these constraints
+            $this->crud->addClause('whereDate', 'fecha_final', $value);
+        });
+
+        $this->crud->addFilter([
+            'type' => 'text',
+            'name' => 'descuento',
+            'label'=> 'Descuento',
+        ], 
+        false, 
+        function($value) { // if the filter is active
+            $this->crud->addClause('where', 'descuento', 'like', '%'.$value.'%');
+        });
     }
 
     protected function setupCreateOperation()

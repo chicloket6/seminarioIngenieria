@@ -44,6 +44,8 @@ class HabitacionCrudController extends CrudController
             'name' => 'status.nombre', // The db column name
             'label' => "Estatus", // Table column heading
          ]);
+
+
          $this->crud->addFilter([
             'type' => 'text',
             'name' => 'numero',
@@ -51,8 +53,9 @@ class HabitacionCrudController extends CrudController
           ], 
           false, 
           function($value) { // if the filter is active
-             $this->crud->addClause('where', 'numero', '=', $value);
+             $this->crud->addClause('where', 'numero', 'like', '%'.$value.'%');
           });
+
           $this->crud->addFilter([
             'name'  => 'tipoHabitacion',
             'type'  => 'select2',
@@ -66,6 +69,7 @@ class HabitacionCrudController extends CrudController
           }, function ($value) { // if the filter is active
                 $this->crud->addClause('where', 'tipo_habitacion_id', $value);
           });
+          
           $this->crud->addFilter([
             'name'  => 'statusHabitacion',
             'type'  => 'select2',

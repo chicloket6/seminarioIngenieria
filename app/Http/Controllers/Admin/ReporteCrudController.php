@@ -172,7 +172,7 @@ class ReporteCrudController extends CrudController
           ], 
           false, 
           function($value) { // if the filter is active
-             $this->crud->addClause('where', 'costo_total', '=', $value);
+             $this->crud->addClause('where', 'costo_total', 'like', '%'.$value.'%');
           });
 
           $this->crud->addFilter([
@@ -182,7 +182,7 @@ class ReporteCrudController extends CrudController
           ], 
           false, 
           function($value) { // if the filter is active
-             $this->crud->addClause('where', 'habitacion_id', '=', $value);
+             $this->crud->addClause('where', 'habitacion_id', 'like', '%'.$value.'%');
           });
 
           $this->crud->addFilter([
