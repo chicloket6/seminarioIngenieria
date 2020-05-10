@@ -39,6 +39,10 @@ class Reservacion extends Model
     public function getTotalGastado($number_format = false){
         $total = $this->costo_total;
 
+        foreach($this->serviciosAdicionales as $sa){
+            $total += $sa->costo;
+        }
+
         return $number_format ? number_format($total, 2) : $total;
     }
     /*
@@ -76,8 +80,8 @@ class Reservacion extends Model
         return $this->belongsTo('App\Models\Promocion', 'promocion_id');
     }
 
-    public function servicioAdicional(){
-        return $this->morphToMany('App\Models\SerivioAdicional', 'promocion_reservacion_servicio_adicional', 'reservacion_id', 'servicio_adicional_id');
+    public function serviciosAdicionales(){
+        return $this->belongsToMany('App\Models\ServicioAdicional', 'reservacion_servicio_adicional', 'reservacion_id', 'servicio_adicional_id');
     }
     /*
     |--------------------------------------------------------------------------

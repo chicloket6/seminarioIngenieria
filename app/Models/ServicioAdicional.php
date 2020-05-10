@@ -37,7 +37,7 @@ class ServicioAdicional extends Model
     |--------------------------------------------------------------------------
     */
     public function reservaciones(){
-        return $this->belongsToMany('App\Models\SerivioAdicional', 'promocion_reservacion_servicio_adicional', 'reservacion_id', 'servicio_adicional_id');
+        return $this->belongsToMany('App\Models\SerivioAdicional', 'eservacion_servicio_adicional', 'servicio_adicional_id', 'reservacion_id');
     }
     /*
     |--------------------------------------------------------------------------

@@ -16,4 +16,3 @@ Route::get('/', function () {
 });
 
 Route::get('promociones-vigentes', '\App\Http\Controllers\Admin\PromocionCrudController@promocionesVigentes');
-

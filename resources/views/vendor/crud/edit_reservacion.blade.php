@@ -77,22 +77,27 @@
 		var tiempo_estadia = $("[name='date_fecha_entrada_fecha_salida']");
 		var habitacion = $("[name='habitacion_id']");
 		var promocion = $("[name='promocion_id']");
+		var serviciosAdicionales = $("[name='serviciosAdicionales[]']");
 		var fecha_entrada = $(".datepicker-range-start");
 		var fecha_salida = $(".datepicker-range-end");
 
 		tiempo_estadia.on('apply.daterangepicker hide.daterangepicker', function(e, picker){
 			fecha_entrada.val( picker.startDate.format('YYYY-MM-DD HH:mm:ss') );
 			fecha_salida.val( picker.endDate.format('YYYY-MM-DD HH:mm:ss') );
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
+			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val(), serviciosAdicionales.val());
 			habitacionesDisponibles(fecha_entrada.val(), fecha_salida.val());
 		});
 
 		habitacion.on('change', function(){
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
+			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val(), serviciosAdicionales.val());
 		});
 
 		promocion.on('change', function(){
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
+			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val(), serviciosAdicionales.val());
+		});
+
+		serviciosAdicionales.on('change', function(){
+			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val(), serviciosAdicionales.val());
 		});
 
 		function habitacionesDisponibles(fech_entrada, fech_salida){
@@ -116,12 +121,12 @@
 			}
 		}
 
-		function calcularTotalPorFechas(habit, fech_entrada, fech_salida, promo){
+		function calcularTotalPorFechas(habit, fech_entrada, fech_salida, promo, serviciosAdicionales){
 			if(habitacion.val() && fecha_entrada.val() && fecha_salida.val()){
 				$.ajax({
 					url: '/admin/reservacion/calcularTotalFechas',
 					type: 'POST',
-					data: {habitacion: habit, fecha_entrada: fech_entrada, fecha_salida: fech_salida, promocion: promo},
+					data: {habitacion: habit, fecha_entrada: fech_entrada, fecha_salida: fech_salida, promocion: promo, serviciosAdicionales: serviciosAdicionales},
 					success: function(result){
 						// console.log('exito: ' + result);
 						if(!isNaN(result)){

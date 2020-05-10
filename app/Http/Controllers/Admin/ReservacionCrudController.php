@@ -19,6 +19,7 @@ use App\Models\Habitacion;
 use App\Models\Promocion;
 use \App\Models\Cliente;
 use \App\Models\MetodoPago; 
+use \App\Models\ServicioAdicional; 
 use DB;
 
 /**
@@ -299,17 +300,35 @@ class ReservacionCrudController extends CrudController
               'readonly' => 'readonly',
             ],
         ]);
+
+        $this->crud->addField([    // Select2Multiple = n-n relationship (with pivot table)
+          'label'     => "Servicios adicionales",
+          'type'      => 'select2_multiple',
+          'name'      => 'serviciosAdicionales', // the method that defines the relationship in your Model
+          'entity'    => 'serviciosAdicionales', // the method that defines the relationship in your Model
+          'attribute' => 'nombre', // foreign key attribute that is shown to user
+          'pivot'     => true, // on create&update, do you need to add/delete pivot table entries?
+          // 'select_all' => true, // show Select All and Clear buttons?
+     
+          // optional
+          'model'     => "App\Models\ServicioAdicional", // foreign key model
+        ]);
         
     }
 
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
-        
-        $this->crud->addField([
-          'name' => 'reservacion_servicio_adicional',
-          'label' => 'Servicio Adicional'
-        ]);
+      $this->crud->addField([  // Select2
+        'label' => "# Habitación - Tipo",
+        'type' => 'select2',
+        'name' => 'habitacion_id', // the db column for the foreign key
+        'entity' => 'Habitacion', // the method that defines the relationship in your Model
+        'attribute' => 'numero', // foreign key attribute that is shown to user
+        'wrapperAttributes' => [
+            'class' => 'form-group col-md-4'
+          ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+      ]);
+      $this->setupCreateOperation();
     }
 
     public function store()
@@ -404,11 +423,17 @@ class ReservacionCrudController extends CrudController
     }
 
     public function calcularTotalFechas(Request $request){
+      
         $fecha_entrada = $request->get('fecha_entrada');
         $fecha_salida = $request->get('fecha_salida');
         $habitacion = Habitacion::find($request->get('habitacion'));
         $promocion = Promocion::find($request->get('promocion'));
+        $serviciosAdicionales = [];
         $total = 0;
+
+        if($request->get('serviciosAdicionales')){
+          $serviciosAdicionales = ServicioAdicional::whereIn('id', $request->get('serviciosAdicionales'))->get();
+        }
 
         if($fecha_entrada && $fecha_salida && $habitacion){
             $fecha_entrada = new Carbon($fecha_entrada);
@@ -421,6 +446,10 @@ class ReservacionCrudController extends CrudController
     
             if($promocion){
                 $total -= (($total / 100) * $promocion->descuento);
+            }
+
+            foreach($serviciosAdicionales as $sa){
+              $total += $sa->costo;
             }
         }
 
@@ -445,9 +474,5 @@ class ReservacionCrudController extends CrudController
       }
 
       return [];
-    }
-
-    public function cancelarReservacion(Reuqest $request){
-
     }
 }
