@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-    <title>Reservación exitosa</title>
+    <title>Cancelación de la reservación</title>
 </head>
 <body>
-    <h4>Reservación exitosa</h4>
+    <h4>Su reservación ha sido cancelada</h4>
     <p>Buen día {{ $cliente->nombre }}.</p>
-    <p>Su reservación #{{ $reservacion->id }} ha sido registrada de manera exitosa en nuestro sistema.</p>
+    <p>Su reservación #{{ $reservacion->id }} ha sido cancelada.</p>
     <p>Le dejamos un resumen de su reservación</p>
     <hr>
     <p><strong># Habitación: </strong>{{ $reservacion->habitacion ? $reservacion->habitacion->numero : '' }}</p>

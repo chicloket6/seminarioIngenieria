@@ -13,6 +13,7 @@ use Mail;
 
 use App\Mail\ReservacionExitosa;
 use App\Mail\CambioReservacion;
+use App\Mail\CancelarReservacion;
 use App\Models\Reservacion;
 use App\Models\Habitacion;
 use App\Models\Promocion;
@@ -34,6 +35,8 @@ class ReservacionCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation { destroy as traitDestroy; }
+
 
     public function setup()
     {
@@ -46,8 +49,8 @@ class ReservacionCrudController extends CrudController
 
     protected function setupListOperation()
     {
-      // $this->crud->removeButton('update');
-      // $this->crud->addButtonFromModelFunction('line', 'editar', 'editarButton', 'end');
+      $this->crud->removeButton('delete');
+      $this->crud->addButtonFromView('line', 'cancelarReservacion', 'cancelarReservacion', 'end');
       
 
       $this->crud->addColumn([
@@ -301,6 +304,11 @@ class ReservacionCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+        
+        $this->crud->addField([
+          'name' => 'reservacion_servicio_adicional',
+          'label' => 'Servicio Adicional'
+        ]);
     }
 
     public function store()
@@ -380,6 +388,20 @@ class ReservacionCrudController extends CrudController
         return $response;
     }
 
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        $reservacion = Reservacion::find($id);
+
+        if($reservacion){
+            $cliente = $reservacion->cliente;
+            Mail::to($cliente->email)->send(new CancelarReservacion($reservacion, $cliente, backpack_user()));
+        }
+
+        return $this->crud->delete($id);
+    }
+
     public function calcularTotalFechas(Request $request){
         $fecha_entrada = $request->get('fecha_entrada');
         $fecha_salida = $request->get('fecha_salida');
@@ -422,5 +444,9 @@ class ReservacionCrudController extends CrudController
       }
 
       return [];
+    }
+
+    public function cancelarReservacion(Reuqest $request){
+
     }
 }
