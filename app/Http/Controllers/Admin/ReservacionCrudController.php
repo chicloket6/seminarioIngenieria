@@ -19,7 +19,7 @@ use App\Models\Habitacion;
 use App\Models\Promocion;
 use \App\Models\Cliente;
 use \App\Models\MetodoPago; 
-
+use DB;
 
 /**
  * Class ReservacionCrudController
@@ -52,6 +52,7 @@ class ReservacionCrudController extends CrudController
       $this->crud->removeButton('delete');
       $this->crud->addButtonFromView('line', 'cancelarReservacion', 'cancelarReservacion', 'end');
       
+      $this->crud->orderBy(DB::raw('ABS(DATEDIFF(reservaciones.fecha_entrada, NOW()))'));
 
       $this->crud->addColumn([
         'name' => 'cliente.nombre', // The db column name
