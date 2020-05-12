@@ -65,6 +65,7 @@
 		var promocion = $("[name='promocion_id']");
 		var fecha_entrada = $(".datepicker-range-start");
 		var fecha_salida = $(".datepicker-range-end");
+		var serviciosAdicionales = $("[name='serviciosAdicionales[]']");
 
 		tiempo_estadia.on('apply.daterangepicker hide.daterangepicker', function(e, picker){
 			fecha_entrada.val( picker.startDate.format('YYYY-MM-DD HH:mm:ss') );
@@ -79,6 +80,10 @@
 
 		promocion.on('change', function(){
 			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
+		});
+
+		serviciosAdicionales.on('change', function(){
+			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val(), serviciosAdicionales.val());
 		});
 
 		function habitacionesDisponibles(fech_entrada, fech_salida){
@@ -102,12 +107,12 @@
 			}
 		}
 
-		function calcularTotalPorFechas(habit, fech_entrada, fech_salida, promo){
+		function calcularTotalPorFechas(habit, fech_entrada, fech_salida, promo, serviciosAdicionales){
 			if(habitacion.val() && fecha_entrada.val() && fecha_salida.val()){
 				$.ajax({
 					url: '/admin/reservacion/calcularTotalFechas',
 					type: 'POST',
-					data: {habitacion: habit, fecha_entrada: fech_entrada, fecha_salida: fech_salida, promocion: promo},
+					data: {habitacion: habit, fecha_entrada: fech_entrada, fecha_salida: fech_salida, promocion: promo, serviciosAdicionales: serviciosAdicionales},
 					success: function(result){
 						// console.log('exito: ' + result);
 						if(!isNaN(result)){

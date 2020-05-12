@@ -365,6 +365,7 @@ class ReservacionCrudController extends CrudController
         $habitacion = $this->crud->request->request->get('habitacion_id');
         $costo_total = $this->crud->request->request->get('costo_total');
         $metodo_pago = $this->crud->request->request->get('metodo_pago_id');
+        $serviciosAdicionales = $this->crud->request->request->get('serviciosAdicionales');
 
         if($costo_total){
           $costo_total = str_replace(',', '', $costo_total);
@@ -374,7 +375,7 @@ class ReservacionCrudController extends CrudController
         $cambios = array();
         
         if($fecha_entrada && $reservacion->fecha_entrada != $fecha_entrada){
-          $cambios['Fecha de entrada: ']= 'Cambió de ' . $reservacion->fecha_entrada . ' a ' . $fecha_entrada;
+          $cambios['Fecha de entrada: '] = 'Cambió de ' . $reservacion->fecha_entrada . ' a ' . $fecha_entrada;
         }
 
         if($fecha_salida && $reservacion->fecha_salida != $fecha_salida){
@@ -392,6 +393,41 @@ class ReservacionCrudController extends CrudController
         if($costo_total && $reservacion->costo_total && $reservacion->costo_total != $costo_total){
           $cambios['Costo total: '] = 'Cambió de ' . number_format($reservacion->costo_total, 2) . ' a ' . number_format($costo_total, 2);
         }
+
+        if(count($serviciosAdicionales) > 0){
+          $serv = ServicioAdicional::whereIn('id', $serviciosAdicionales)->get();
+          if(count($reservacion->serviciosAdicionales) == 0){
+            $ser = '';
+            foreach($serv as $sa){
+              $ser .= $sa->nombre . " ";
+            }
+  
+            if($ser){
+              $cambios['Servicios adicionales: '] = 'Cambió de no tener a ' . $ser;
+            }
+          }
+          else{
+            $serA = '';
+            foreach($reservacion->serviciosAdicionales as $sa){
+              $serA .= $sa->nombre . " ";
+            }
+
+            $ser = '';
+            foreach($serv as $sa){
+              $ser .= $sa->nombre . " ";
+            }
+
+            $cambios['Servicios adicionales: '] = 'Cambió de '.$serA.' a '.$ser;
+          }
+        }
+        else if(count($reservacion->serviciosAdicionales) > 0){
+          $ser = '';
+          foreach($reservacion->serviciosAdicionales as $sa){
+            $ser .= $sa->nombre . " ";
+          }
+          $cambios['Servicios adicionales: '] = 'Cambió de '.$ser.' a no tener ningún servicio adicional';
+        }
+        
         // do something before validation, before save, before everything; for example:
         // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
         // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);

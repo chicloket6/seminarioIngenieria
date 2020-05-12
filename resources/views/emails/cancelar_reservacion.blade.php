@@ -18,6 +18,13 @@
     <p><strong>Total pagado: </strong>{{ number_format($reservacion->costo_total, 2) }}</p>
     <p><strong>Promociones aplicadas: </strong>{{ $reservacion->promocion ? $reservacion->promocion->nombre : 'Ninguna promoción aplicada' }}</p>
 
+    @if(count($reservacion->serviciosAdicionales) > 0)
+        <p><strong>Servicios adicionales: </strong></p>
+        @foreach($reservacion->serviciosAdicionales as $sa)
+            <p>{{ $sa->nombre .': '. format_number($sa->costo, 2) }}</p>
+        @endforeach
+    @endif
+
     <h4>Fue atendido por: {{ $empleado->name }}</h4>
 </body>
 </html>
