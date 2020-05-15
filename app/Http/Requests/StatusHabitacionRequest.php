@@ -27,7 +27,7 @@ class StatusHabitacionRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
-            'nombre' => 'required|unique:status_habitacion',
+            'nombre' => 'required',
         ];
     }
 

@@ -27,7 +27,7 @@ class MetodoPagoRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
-            'nombre' => 'required|unique:metodos_pago',
+            'nombre' => 'required',
         ];
     }
 

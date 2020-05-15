@@ -45,6 +45,15 @@ class Reservacion extends Model
 
         return $number_format ? number_format($total, 2) : $total;
     }
+
+    public function getServiciosAdicionales(){
+        $sv = '';
+        foreach($this->serviciosAdicionales as $sa){
+            $sv .= $sa->nombre .'  ';
+        }
+
+        return $sv;
+    }
     /*
     |--------------------------------------------------------------------------
     | BOTONES

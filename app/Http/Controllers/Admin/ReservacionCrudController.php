@@ -286,8 +286,11 @@ class ReservacionCrudController extends CrudController
             'attribute' => 'nombre', // foreign key attribute that is shown to user
             'wrapperAttributes' => [
                 'class' => 'form-group col-md-6'
-              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-        ]);
+            ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            'options'   => (function ($query) {
+              return $query->where('fecha_inicio', '<=', now())->where('fecha_final', '>=', now())->get();
+            }), 
+          ]);
 
         $this->crud->addField([
             'name' => 'costo_total',

@@ -103,7 +103,7 @@ class HabitacionCrudController extends CrudController
         $this->crud->addField([  // Select2
             'label' => "Tipo de habitación",
             'type' => 'select2',
-            'name' => 'tipos_habitacion_id', // the db column for the foreign key
+            'name' => 'tipo_habitacion_id', // the db column for the foreign key
             'entity' => 'tipoHabitacion', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
             'wrapperAttributes' => [

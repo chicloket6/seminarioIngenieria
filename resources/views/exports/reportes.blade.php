@@ -23,7 +23,7 @@
             <td>{{ $reservacion->costo_total }}</td>
             <td>{{ $reservacion->metodoPago ? $reservacion->metodoPago->nombre : '' }}</td>
             <td>{{ $reservacion->promocion ? $reservacion->promocion->nombre : 'Ninguna promoción aplicada' }}</td>
-            {{--<td>{{ $reservacion->promocion ? $reservacion->promocion->nombre : '' }}</td>--}}
+            <td>{{ $reservacion->getServiciosAdicionales() }}</td>
             <td>{{ $reservacion->getTotalGastado() }}</td>
         </tr>
     @endforeach

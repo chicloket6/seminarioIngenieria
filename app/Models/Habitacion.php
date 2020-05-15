@@ -67,7 +67,7 @@ class Habitacion extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function getNumeroAttribute(){
-        return $this->tipoHabitacion ? ($this->attributes['numero'] . ' - ' . $this->tipoHabitacion->nombre) : $this->attributes['numero'];
-    }
+    // public function getNumeroAttribute(){
+    //     return $this->tipoHabitacion ? ($this->attributes['numero'] . ' - ' . $this->tipoHabitacion->nombre) : $this->attributes['numero'];
+    // }
 }
