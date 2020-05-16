@@ -39,33 +39,6 @@ class ClienteCrudController extends CrudController
         $this->crud->removeButton('show');
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
         $this->crud->setFromDb();
-        $this->crud->addFilter([
-            'type' => 'text',
-            'name' => 'nombre',
-            'label'=> 'Nombre'
-          ], 
-          false, 
-          function($value) { // if the filter is active
-             $this->crud->addClause('where', 'nombre', 'like', '%'.$value.'%');
-          });
-          $this->crud->addFilter([
-            'type' => 'text',
-            'name' => 'email',
-            'label'=> 'Email'
-          ], 
-          false, 
-          function($value) { // if the filter is active
-             $this->crud->addClause('where', 'email', 'like', '%'.$value.'%');
-          });
-          $this->crud->addFilter([
-            'type' => 'text',
-            'name' => 'telefono',
-            'label'=> 'Telefono'
-          ], 
-          false, 
-          function($value) { // if the filter is active
-             $this->crud->addClause('where', 'telefono', 'like', '%'.$value.'%');
-          });
     }
 
     protected function setupCreateOperation()

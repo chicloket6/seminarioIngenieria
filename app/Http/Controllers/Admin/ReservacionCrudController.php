@@ -54,7 +54,7 @@ class ReservacionCrudController extends CrudController
       $this->crud->removeButton('delete');
       $this->crud->addButtonFromView('line', 'cancelarReservacion', 'cancelarReservacion', 'end');
       
-      $this->crud->orderBy(DB::raw('ABS(DATEDIFF(reservaciones.fecha_entrada, NOW()))'));
+      $this->crud->orderBy(DB::raw('ABS(DATEDIFF(reservaciones.fecha_entrada, NOW()))'));//ORDENADO POR FECHA MAS PROXIMA A HOY
 
       $this->crud->addColumn([
         'name' => 'cliente.nombre', // The db column name
@@ -64,7 +64,7 @@ class ReservacionCrudController extends CrudController
                 $q->where('nombre', 'like', '%'.$searchTerm.'%');
             });
         }
-     ]);
+      ]);
 
       $this->crud->addColumn([
         'name' => 'habitacion.numero', // The db column name
@@ -75,6 +75,16 @@ class ReservacionCrudController extends CrudController
             });
         }
      ]);
+
+     $this->crud->addColumn([
+      'name' => 'habitacion.tipoHabitacion.nombre', // The db column name
+      'label' => "Tipo de habitación", // Table column heading
+      'searchLogic' => function ($query, $column, $searchTerm) {
+          $query->orWhereHas('habitacion.tipoHabitacion', function($q) use ($searchTerm){
+              $q->where('nombre', 'like', '%'.$searchTerm.'%');
+          });
+      }
+      ]);
 
 
      $this->crud->addColumn([
@@ -158,40 +168,42 @@ class ReservacionCrudController extends CrudController
         3 => 'Lujo',
       ];
       }, function ($value) { // if the filter is active
-            $this->crud->addClause('where', 'tipo_habitacion_id', $value);
+            $this->crud->addClause('whereHas', 'habitacion.tipoHabitacion', function($q) use ($value){
+              $q->where('id', $value);
+            });
       });
 
-      $this->crud->addFilter([
-        'name'  => 'status',
-        'type'  => 'select2',
-        'label' => 'Status De La Reservación'
-      ], function () {
-        return [
-          1 => 'Activa',
-          2 => 'Inactiva',
-        ];
-      }, function ($value) { // if the filter is active
-            $this->crud->addClause('where', 'status_reservacion', $value);
-      });
+      // $this->crud->addFilter([
+      //   'name'  => 'status',
+      //   'type'  => 'select2',
+      //   'label' => 'Status De La Reservación'
+      // ], function () {
+      //   return [
+      //     1 => 'Activa',
+      //     2 => 'Inactiva',
+      //   ];
+      // }, function ($value) { // if the filter is active
+      //       $this->crud->addClause('where', 'status_reservacion', $value);
+      // });
+
+      // $this->crud->addFilter([
+      //   'type' => 'text',
+      //   'name' => 'costo_total',
+      //   'label'=> 'Costo Total'
+      // ], 
+      // false, 
+      // function($value) { // if the filter is active
+      //    $this->crud->addClause('where', 'costo_total', 'like', '%'.$value.'%');
+      // });
 
       $this->crud->addFilter([
-        'type' => 'text',
-        'name' => 'costo_total',
-        'label'=> 'Costo Total'
-      ], 
-      false, 
-      function($value) { // if the filter is active
-         $this->crud->addClause('where', 'costo_total', 'like', '%'.$value.'%');
-      });
-
-      $this->crud->addFilter([
-        'type' => 'text',
-        'name' => 'habitacion_id',
-        'label'=> 'Habitación'
-      ], 
-      false, 
-      function($value) { // if the filter is active
-         $this->crud->addClause('where', 'habitacion_id', 'like', '%'.$value.'%');
+        'name' => 'habitacion',
+        'type' => 'select2_multiple',
+        'label'=> '# Habitación'
+      ], function() {
+          return Habitacion::pluck('numero', 'id')->toArray();
+      }, function($values) { // if the filter is active
+          $this->crud->addClause('whereIn', 'habitacion_id', json_decode($values));
       });
 
       $this->crud->addFilter([
@@ -322,17 +334,42 @@ class ReservacionCrudController extends CrudController
 
     protected function setupUpdateOperation()
     {
-      $this->crud->addField([  // Select2
-        'label' => "# Habitación - Tipo",
-        'type' => 'select2',
-        'name' => 'habitacion_id', // the db column for the foreign key
-        'entity' => 'Habitacion', // the method that defines the relationship in your Model
-        'attribute' => 'numero', // foreign key attribute that is shown to user
-        'wrapperAttributes' => [
-            'class' => 'form-group col-md-4'
-          ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
-      ]);
-      $this->setupCreateOperation();
+      $reservacion = Reservacion::find($this->crud->request->route('id'));
+
+      if($reservacion){
+        if($reservacion->fecha_entrada > Carbon::now()->addDays(3)){//SE PUEDE EDITAR POR COMPLETO TODA LA RESERVACION SI LA FECHA DE ENTRADA ES MAYOR A 3 DIAS DE HOY
+          $this->setupCreateOperation();
+        }
+        else{
+          $this->crud->addField([   // CustomHTML
+            'name' => 'reservacion_actual',
+            'type' => 'custom_html',
+            'value' => "<h2>Información de la reservación</h2>
+                        <hr>
+                        <div class='w-100 d-flex flex-wrap justify-content-between'>
+                          <span id='cliente' class='w-50 mb-2'><strong>Cliente: </strong>" . $reservacion->cliente->nombre . "</span>
+                          <span id='habitacion' class='w-50 mb-2'><strong># Habitación: </strong>" . $reservacion->habitacion->numero . "</span>
+                          <span id='tipo_habitacion' class='w-50 mb-2'><strong>Tipo de habitación: </strong>" . $reservacion->habitacion->tipoHabitacion->nombre . "</span>
+                          <span id='promocion' class='w-50 mb-2'><strong>Promoción: </strong>" . $reservacion->promocion->nombre . "</span>
+                          <span id='costo_total' class='w-50 mb-2'><strong>Costo total: </strong>" . number_format($reservacion->costo_total, 2) . "</span>
+                          <span id='servicios_adicionales' class='w-50 mb-2'><strong>Servicios Adicionales: </strong>" . $reservacion->getServiciosAdicionales() . "</span>
+                        </div>"
+          ]);
+        }
+
+        $this->crud->addField([    // Select2Multiple = n-n relationship (with pivot table)
+          'label'     => "Servicios adicionales",
+          'type'      => 'select2_multiple',
+          'name'      => 'serviciosAdicionales', // the method that defines the relationship in your Model
+          'entity'    => 'serviciosAdicionales', // the method that defines the relationship in your Model
+          'attribute' => 'nombre', // foreign key attribute that is shown to user
+          'pivot'     => true, // on create&update, do you need to add/delete pivot table entries?
+          // 'select_all' => true, // show Select All and Clear buttons?
+     
+          // optional
+          'model'     => "App\Models\ServicioAdicional", // foreign key model
+        ]);
+      }      
     }
 
     public function store()
@@ -370,6 +407,8 @@ class ReservacionCrudController extends CrudController
         $costo_total = $this->crud->request->request->get('costo_total');
         $metodo_pago = $this->crud->request->request->get('metodo_pago_id');
         $serviciosAdicionales = $this->crud->request->request->get('serviciosAdicionales');
+
+        $this->crud->request->request->remove('reservacion_actual');
 
         if($costo_total){
           $costo_total = str_replace(',', '', $costo_total);
