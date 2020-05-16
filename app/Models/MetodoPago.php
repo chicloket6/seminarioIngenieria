@@ -30,7 +30,11 @@ class MetodoPago extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function rules($id = null){
+        return[
+            'nombre' => 'unique:metodos_pago,nombre,' . $id
+        ];
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

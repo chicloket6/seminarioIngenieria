@@ -30,7 +30,11 @@ class Habitacion extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function rules($id = null){
+        return[
+            'numero' => 'unique:habitaciones,numero,' . $id
+        ];
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

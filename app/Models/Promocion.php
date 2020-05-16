@@ -30,7 +30,11 @@ class Promocion extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function rules($id = null){
+        return[
+            'nombre' => 'unique:promociones,nombre,' . $id
+        ];
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

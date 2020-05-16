@@ -63,9 +63,9 @@ if (isset($field['value']) && ($field['value'] instanceof \Carbon\CarbonInterfac
                 $customConfig = $.extend({
                     format: 'DD/MM/YYYY HH:mm',
                     defaultDate: $field.val(),
-                    @if($field['minDate'])
+                    @isset($field['minDate'])
                         minDate: new Date("{{ $field['minDate'] }}"),
-                    @endif
+                    @endisset
                     @if(isset($field['allows_null']) && $field['allows_null'])
                     showClear: true,
                     @endif

@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Http\Requests\PromocionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Validator;
+
 use App\Models\Promocion;
 
 /**
@@ -20,6 +22,8 @@ class PromocionCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
 
     public function setup()
     {
@@ -137,7 +141,81 @@ class PromocionCrudController extends CrudController
 
     protected function setupUpdateOperation()
     {
+        $this->crud->addField(
+            [   // Text
+                'name' => 'fecha_inicio',
+                'label' => "Fecha De Inicio",
+                'type' => 'datetime_picker',
+                // 'minDate' => Carbon::now()->toDateString(),
+                // optional:
+                'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'DD/MM/YYYY HH:mm',
+                'language' => 'es'
+                ],
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
+
+        $this->crud->addField(
+            [   // Text
+                'name' => 'fecha_final',
+                'label' => "Fecha De Fin",
+                'type' => 'datetime_picker',
+                'minDate' => Carbon::now()->toDateString(),
+                // optional:
+                'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format' => 'DD/MM/YYYY HH:mm',
+                'language' => 'es'
+                ],
+                'wrapperAttributes' => [
+                    'class' => 'form-group col-md-4'
+                  ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+            ]
+        );
         $this->setupCreateOperation();
+    }
+
+    public function store()
+    {
+        if(Promocion::first()){
+            $data = $this->crud->request->all();
+            $validator = Validator::make($data, Promocion::first()->rules());
+            if ($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($data);
+            }
+        }
+        // do something before validation, before save, before everything; for example:
+        // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
+        // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
+        // $this->crud->request->request->remove('password_confirmation');
+        // $this->crud->removeField('password_confirmation');
+        $response = $this->traitStore();
+        // do something after save
+        return $response;
+    }
+
+    public function update()
+    {
+        if(Promocion::first()){
+            $data = $this->crud->request->all();
+            $validator = Validator::make($data, Promocion::first()->rules($data['id']));
+            if ($validator->fails()){
+                return redirect()->back()->withErrors($validator)->withInput($data);
+            }
+        }
+        
+        // do something before validation, before save, before everything; for example:
+        // $this->crud->request->request->add(['author_id'=> backpack_user()->id]);
+        // $this->crud->addField(['type' => 'hidden', 'name' => 'author_id']);
+        // $this->crud->request->request->remove('password_confirmation');
+        // $this->crud->removeField('password_confirmation');
+        $response = $this->traitUpdate();
+        // do something after save
+        return $response;
     }
 
     public function promocionesVigentes(){

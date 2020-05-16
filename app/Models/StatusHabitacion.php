@@ -30,7 +30,11 @@ class StatusHabitacion extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function rules($id = null){
+        return[
+            'nombre' => 'unique:status_habitacion,nombre,' . $id
+        ];
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

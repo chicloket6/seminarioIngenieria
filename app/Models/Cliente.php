@@ -29,7 +29,11 @@ class Cliente extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function rules($id = null){
+        return[
+            'email' => 'unique:clientes,email,' . $id
+        ];
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

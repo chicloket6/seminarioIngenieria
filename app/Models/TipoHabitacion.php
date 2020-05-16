@@ -30,7 +30,11 @@ class TipoHabitacion extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function rules($id = null){
+        return[
+            'nombre' => 'unique:tipos_habitacion,nombre,' . $id
+        ];
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
