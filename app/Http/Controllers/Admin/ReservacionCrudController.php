@@ -50,6 +50,7 @@ class ReservacionCrudController extends CrudController
 
     protected function setupListOperation()
     {
+      $this->crud->removeButton('show');
       $this->crud->removeButton('delete');
       $this->crud->addButtonFromView('line', 'cancelarReservacion', 'cancelarReservacion', 'end');
       

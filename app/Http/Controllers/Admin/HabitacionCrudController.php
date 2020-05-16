@@ -28,6 +28,7 @@ class HabitacionCrudController extends CrudController
 
     protected function setupListOperation()
     {
+        $this->crud->removeButton('show');
         // TODO: remove setFromDb() and manually define Columns, maybe Filters
         //$this->crud->setFromDb();
         $this->crud->addColumn([
