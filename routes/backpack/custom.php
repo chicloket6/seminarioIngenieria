@@ -39,7 +39,9 @@ Route::group([//RUTAS PARA TODOS LOS ROLES (GERENCIA Y RECEPCION)
     Route::crud('reservacion', 'ReservacionCrudController');
     
     //GETS
-
+    Route::get('/register', function(){
+        return redirect('admin');
+    })->name('backpack.auth.register');
     //POSTS
     Route::post('reservacion/calcularTotalFechas', 'ReservacionCrudController@calcularTotalFechas');
     Route::post('reservacion/habitacionesDisponibles', 'ReservacionCrudController@habitacionesDisponibles');
