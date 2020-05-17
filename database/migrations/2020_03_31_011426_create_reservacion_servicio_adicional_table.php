@@ -34,6 +34,6 @@ class CreateReservacionServicioAdicionalTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promocion_reservacion_servicio_adicional');
+        Schema::dropIfExists('reservacion_servicio_adicional');
     }
 }

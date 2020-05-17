@@ -30,6 +30,8 @@ class HabitacionRequest extends FormRequest
             'numero' => 'required',
             'tipo_habitacion_id' => 'required',
             'status_id' => 'required',
+            'max_adultos' => 'required',
+            'max_ninos' => 'required',
         ];
     }
 

@@ -63,35 +63,33 @@
 		var tiempo_estadia = $("[name='date_fecha_entrada_fecha_salida']");
 		var habitacion = $("[name='habitacion_id']");
 		var promocion = $("[name='promocion_id']");
+		var cantidad_adultos = $("[name='cantidad_adultos']");
+		var cantidad_ninos = $("[name='cantidad_ninos']");
 		var fecha_entrada = $(".datepicker-range-start");
 		var fecha_salida = $(".datepicker-range-end");
 		var serviciosAdicionales = $("[name='serviciosAdicionales[]']");
+		var i = 0;
 
 		tiempo_estadia.on('apply.daterangepicker hide.daterangepicker', function(e, picker){
 			fecha_entrada.val( picker.startDate.format('YYYY-MM-DD HH:mm:ss') );
 			fecha_salida.val( picker.endDate.format('YYYY-MM-DD HH:mm:ss') );
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
-			habitacionesDisponibles(fecha_entrada.val(), fecha_salida.val());
+			calcularTotalPorFechas();
+			habitacionesDisponibles();
 		});
 
-		habitacion.on('change', function(){
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
+		cantidad_adultos.add(cantidad_ninos).add(habitacion).add(promocion).add(serviciosAdicionales).on('change', function(){
+			if($(this).attr('name') == cantidad_adultos.attr('name') || $(this).attr('name') == cantidad_ninos.attr('name')){
+				habitacionesDisponibles();
+			}
+			calcularTotalPorFechas();
 		});
 
-		promocion.on('change', function(){
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
-		});
-
-		serviciosAdicionales.on('change', function(){
-			calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val(), serviciosAdicionales.val());
-		});
-
-		function habitacionesDisponibles(fech_entrada, fech_salida){
-			if(fecha_entrada.val() && fecha_salida.val()){
+		function habitacionesDisponibles(){
+			if(fecha_entrada.val() && fecha_salida.val() && cantidad_adultos.val() && cantidad_ninos.val()){
 				$.ajax({
 					url: '/admin/reservacion/habitacionesDisponibles',
 					type: 'POST',
-					data: {fecha_entrada: fech_entrada, fecha_salida: fech_salida},
+					data: {fecha_entrada: fecha_entrada.val(), fecha_salida: fecha_salida.val(), cantidad_adultos: cantidad_adultos.val(), cantidad_ninos: cantidad_ninos.val()},
 					success: function(result){
 						habitacion[0].options.length = 0;
 						let opciones = [];
@@ -107,12 +105,12 @@
 			}
 		}
 
-		function calcularTotalPorFechas(habit, fech_entrada, fech_salida, promo, serviciosAdicionales){
-			if(habitacion.val() && fecha_entrada.val() && fecha_salida.val()){
+		function calcularTotalPorFechas(){
+			if(habitacion.val() && fecha_entrada.val() && fecha_salida.val() && cantidad_adultos.val() && cantidad_ninos.val()){
 				$.ajax({
 					url: '/admin/reservacion/calcularTotalFechas',
 					type: 'POST',
-					data: {habitacion: habit, fecha_entrada: fech_entrada, fecha_salida: fech_salida, promocion: promo, serviciosAdicionales: serviciosAdicionales},
+					data: {habitacion: habitacion.val(), fecha_entrada: fecha_entrada.val(), fecha_salida: fecha_salida.val(), promocion: promocion.val(), serviciosAdicionales: serviciosAdicionales.val(), cantidad_ninos: cantidad_ninos.val(), cantidad_adultos: cantidad_adultos.val()},
 					success: function(result){
 						// console.log('exito: ' + result);
 						if(!isNaN(result)){

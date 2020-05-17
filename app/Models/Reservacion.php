@@ -48,8 +48,17 @@ class Reservacion extends Model
 
     public function getServiciosAdicionales(){
         $sv = '';
-        foreach($this->serviciosAdicionales as $sa){
-            $sv .= $sa->nombre .'  ';
+        $total_sa = count($this->serviciosAdicionales);
+        for($i = 0; $i < $total_sa; $i++){
+            if($i < $total_sa - 1){
+                $sv .= $this->serviciosAdicionales[$i]->nombre .', ';
+            }
+            else if($i != 0){
+                $sv .= ' y ' . $this->serviciosAdicionales[$i]->nombre;
+            }
+            else{
+                $sv .= $this->serviciosAdicionales[$i]->nombre;
+            }
         }
 
         return $sv;

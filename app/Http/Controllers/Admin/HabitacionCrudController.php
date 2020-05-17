@@ -48,6 +48,16 @@ class HabitacionCrudController extends CrudController
          ]);
 
          $this->crud->addColumn([
+          'name' => 'max_adultos',
+          'label' => 'Max. Adultos'
+         ]);
+
+         $this->crud->addColumn([
+          'name' => 'max_ninos',
+          'label' => 'Max. Niños'
+         ]);
+
+         $this->crud->addColumn([
             'name' => 'status.nombre', // The db column name
             'label' => "Estatus", // Table column heading
          ]);
@@ -103,7 +113,7 @@ class HabitacionCrudController extends CrudController
             'label' => 'Número',
             'type' => 'text',
             'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
+                'class' => 'form-group col-md-6'
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
@@ -114,8 +124,28 @@ class HabitacionCrudController extends CrudController
             'entity' => 'tipoHabitacion', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
             'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
+                'class' => 'form-group col-md-6'
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+        ]);
+
+        $this->crud->addField([
+          'name' => 'max_adultos',
+          'label' => 'Cantidad máxima de adultos (1 - 8)',
+          'type' => 'number',
+          'attributes' => ['min' => 1, 'max' => 8],
+          'wrapperAttributes' => [
+            'class' => 'form-group col-md-6'
+          ],
+        ]);
+
+        $this->crud->addField([
+          'name' => 'max_ninos',
+          'label' => 'Cantidad máxima de niños (1 - 8)',
+          'type' => 'number',
+          'attributes' => ['min' => 1, 'max' => 8],
+          'wrapperAttributes' => [
+            'class' => 'form-group col-md-6'
+          ],
         ]);
 
         $this->crud->addField([  // Select2

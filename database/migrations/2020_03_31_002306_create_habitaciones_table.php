@@ -16,10 +16,15 @@ class CreateHabitacionesTable extends Migration
         Schema::create('habitaciones', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('numero');
+            $table->integer('max_adultos')->default(0);
+            $table->integer('max_ninos')->default(0);
+            
             $table->unsignedBigInteger('tipo_habitacion_id')->nullable();
             $table->foreign('tipo_habitacion_id')->references('id')->on('tipos_habitacion');
+            
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')->references('id')->on('status_habitacion');
+            
             $table->timestamps();
             $table->softDeletes();
         });

@@ -11,6 +11,8 @@
     <p>Su reservación #{{ $reservacion->id }} ha sido cancelada.</p>
     <p>Le dejamos un resumen de su reservación</p>
     <hr>
+    <p><strong>Adultos: </strong>{{ $reservacion->cantidad_adultos }}</p>
+    <p><strong>Niños: </strong>{{ $reservacion->cantidad_ninos }}</p>
     <p><strong># Habitación: </strong>{{ $reservacion->habitacion ? $reservacion->habitacion->numero : '' }}</p>
     <p><strong>Fecha de entrada: </strong>{{ $reservacion->fecha_entrada ? $reservacion->fecha_entrada->format('d/m/Y H:i') . 'Hrs' : '' }}</p>
     <p><strong>Fecha de salida: </strong>{{ $reservacion->fecha_salida ? $reservacion->fecha_salida->format('d/m/Y H:i') . 'Hrs' : '' }}</p>
@@ -19,12 +21,9 @@
     <p><strong>Promociones aplicadas: </strong>{{ $reservacion->promocion ? $reservacion->promocion->nombre : 'Ninguna promoción aplicada' }}</p>
 
     @if(count($reservacion->serviciosAdicionales) > 0)
-        <p><strong>Servicios adicionales: </strong></p>
-        @foreach($reservacion->serviciosAdicionales as $sa)
-            <p>{{ $sa->nombre .': '. format_number($sa->costo, 2) }}</p>
-        @endforeach
+        <p><strong>Servicios adicionales: </strong>{{ $reservacion->getServiciosAdicionales() }}</p>
     @endif
 
-    <h4>Fue atendido por: {{ $empleado->name }}</h4>
+    <h4>Fue atendido por {{ $empleado->name }}</h4>
 </body>
 </html>

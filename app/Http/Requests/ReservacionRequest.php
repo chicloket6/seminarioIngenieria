@@ -34,6 +34,8 @@ class ReservacionRequest extends FormRequest
             'habitacion_id' => 'required',
             'cliente_id' => 'required',
             'metodo_pago_id' => 'required',
+            'cantidad_adultos' => 'required',
+            'cantidad_ninos' => 'required',
         ];
     }
 

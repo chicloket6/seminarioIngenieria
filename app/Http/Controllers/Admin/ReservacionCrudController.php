@@ -252,10 +252,30 @@ class ReservacionCrudController extends CrudController
               'timePicker' => true,
               'locale' => ['format' => 'DD/MM/YYYY HH:mm'],
           ]
-      ]);
+        ]);
+
+        $this->crud->addField([
+          'name' => 'cantidad_adultos',
+          'label' => 'Cantidad de adultos (1 - 8) Precio por adulto: ' . env('PRECIO_POR_ADULTO', 400),
+          'type' => 'number',
+          'attributes' => ['min' => 1, 'max' => 8],
+          'wrapperAttributes' => [
+            'class' => 'form-group col-md-6'
+          ],
+        ]);
+
+        $this->crud->addField([
+          'name' => 'cantidad_ninos',
+          'label' => 'Cantidad de niños (1 - 8) Precio por niño: ' . env('PRECIO_POR_NINO', 250),
+          'type' => 'number',
+          'attributes' => ['min' => 1, 'max' => 8],
+          'wrapperAttributes' => [
+            'class' => 'form-group col-md-6'
+          ],
+        ]);
 
         $this->crud->addField([  // Select2
-            'label' => "# Habitación - Tipo",
+            'label' => "# Habitación",
             'type' => 'select2',
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
@@ -347,28 +367,17 @@ class ReservacionCrudController extends CrudController
             'value' => "<h2>Información de la reservación</h2>
                         <hr>
                         <div class='w-100 d-flex flex-wrap justify-content-between'>
-                          <span id='cliente' class='w-50 mb-2'><strong>Cliente: </strong>" . $reservacion->cliente->nombre . "</span>
-                          <span id='habitacion' class='w-50 mb-2'><strong># Habitación: </strong>" . $reservacion->habitacion->numero . "</span>
-                          <span id='tipo_habitacion' class='w-50 mb-2'><strong>Tipo de habitación: </strong>" . $reservacion->habitacion->tipoHabitacion->nombre . "</span>
-                          <span id='promocion' class='w-50 mb-2'><strong>Promoción: </strong>" . $reservacion->promocion->nombre . "</span>
-                          <span id='costo_total' class='w-50 mb-2'><strong>Costo total: </strong>" . number_format($reservacion->costo_total, 2) . "</span>
+                          <span id='cliente' class='w-50 mb-2'><strong>Cliente: </strong>" . $reservacion->cliente ? $reservacion->cliente->nombre : '' . "</span>
+                          <span id='habitacion' class='w-50 mb-2'><strong># Habitación: </strong>" . $reservacion->habitacion ? $reservacion->habitacion->numero : '' . "</span>
+                          <span id='fecha_entrada' class='w-50 mb-2'><strong>Fecha de entrada: </strong>" . $reservacion->fecha_entrada ? $reservacion->fecha_entrada->format('d/m/Y H:i') : '' . "Hrs</span>
+                          <span id='fecha_salida' class='w-50 mb-2'><strong>Fecha de salida: </strong>" . $reservacion->fecha_salida ? $reservacion->fecha_salida->format('d/m/Y H:i') : ''. "Hrs</span>
+                          <span id='tipo_habitacion' class='w-50 mb-2'><strong>Tipo de habitación: </strong>" . $reservacion->habitacion ? ($reservacion->habitacion->tipoHabitacion ? $reservacion->habitacion->tipoHabitacion->nombre : '') : '' . "</span>
+                          <span id='promocion' class='w-50 mb-2'><strong>Promoción: </strong>" . ($reservacion->promocion ? $reservacion->promocion->nombre : 'Ninguna promoción aplicada') . "</span>
+                          <span id='costo_total' class='w-50 mb-2'><strong>Costo total: </strong>" . $reservacion->costo_total ? number_format($reservacion->costo_total, 2) : '' . "</span>
                           <span id='servicios_adicionales' class='w-50 mb-2'><strong>Servicios Adicionales: </strong>" . $reservacion->getServiciosAdicionales() . "</span>
                         </div>"
           ]);
         }
-
-        $this->crud->addField([    // Select2Multiple = n-n relationship (with pivot table)
-          'label'     => "Servicios adicionales",
-          'type'      => 'select2_multiple',
-          'name'      => 'serviciosAdicionales', // the method that defines the relationship in your Model
-          'entity'    => 'serviciosAdicionales', // the method that defines the relationship in your Model
-          'attribute' => 'nombre', // foreign key attribute that is shown to user
-          'pivot'     => true, // on create&update, do you need to add/delete pivot table entries?
-          // 'select_all' => true, // show Select All and Clear buttons?
-     
-          // optional
-          'model'     => "App\Models\ServicioAdicional", // foreign key model
-        ]);
       }      
     }
 
@@ -437,7 +446,7 @@ class ReservacionCrudController extends CrudController
           $cambios['Costo total: '] = 'Cambió de ' . number_format($reservacion->costo_total, 2) . ' a ' . number_format($costo_total, 2);
         }
 
-        if(count($serviciosAdicionales) > 0){
+        if($serviciosAdicionales && count($serviciosAdicionales) > 0){
           $serv = ServicioAdicional::whereIn('id', $serviciosAdicionales)->get();
           if(count($reservacion->serviciosAdicionales) == 0){
             $ser = '';
@@ -507,6 +516,8 @@ class ReservacionCrudController extends CrudController
         $fecha_salida = $request->get('fecha_salida');
         $habitacion = Habitacion::find($request->get('habitacion'));
         $promocion = Promocion::find($request->get('promocion'));
+        $cantidad_adultos = $request->get('cantidad_adultos');
+        $cantidad_ninos = $request->get('cantidad_ninos');
         $serviciosAdicionales = [];
         $total = 0;
 
@@ -514,7 +525,7 @@ class ReservacionCrudController extends CrudController
           $serviciosAdicionales = ServicioAdicional::whereIn('id', $request->get('serviciosAdicionales'))->get();
         }
 
-        if($fecha_entrada && $fecha_salida && $habitacion){
+        if($fecha_entrada && $fecha_salida && $habitacion && $cantidad_adultos && $cantidad_ninos){
             $fecha_entrada = new Carbon($fecha_entrada);
             $fecha_salida = new Carbon($fecha_salida);
 
@@ -522,13 +533,15 @@ class ReservacionCrudController extends CrudController
 
             $dias = $fecha_entrada->diffInDays($fecha_salida, false);
             $total = $tipo_habitacion->costo * ($dias === 0 ? 1 : $dias);
-    
-            if($promocion){
-                $total -= (($total / 100) * $promocion->descuento);
-            }
 
             foreach($serviciosAdicionales as $sa){
               $total += $sa->costo;
+            }
+
+            $total += (env('PRECIO_POR_ADULTO', 400) * $cantidad_adultos) + (env('PRECIO_POR_NINO', 250) * $cantidad_ninos);
+
+            if($promocion){
+              $total -= (($total / 100) * $promocion->descuento);
             }
         }
 
@@ -539,17 +552,19 @@ class ReservacionCrudController extends CrudController
 
       $fecha_entrada = $request->get('fecha_entrada');
       $fecha_salida = $request->get('fecha_salida');
+      $cantidad_adultos = $request->get('cantidad_adultos');
+      $cantidad_ninos = $request->get('cantidad_ninos');
 
-      if($fecha_entrada && $fecha_salida){
+      if($fecha_entrada && $fecha_salida && $cantidad_adultos && $cantidad_ninos){
         $fecha_entrada = new Carbon($fecha_entrada);
         $fecha_salida = new Carbon($fecha_salida);
-        $fecha_entrada->addHours(3);
+        $fecha_entrada->subHours(3);
 
-        return Habitacion::where('status_id', 1)->where(function ($query) use ($fecha_entrada, $fecha_salida){
-          $query->whereHas('reservaciones', function($q) use ($fecha_entrada, $fecha_salida){
-            $q->whereDate('fecha_salida', '<=', $fecha_entrada);
-          })->orWhere('id', '!=', 0);
-        })->get();
+        return Habitacion::where(function($query) use ($fecha_entrada){
+          $query->whereHas('reservaciones', function($q) use ($fecha_entrada){
+            $q->whereDate('fecha_salida', '<', $fecha_entrada);
+          })->orWhere('id', '!=', 0);//EN CASO DE NO TENER RESERVACIONES EN EL SISTEMA
+        })->where('status_id', 1)->where('max_adultos', '>=', $cantidad_adultos)->where('max_ninos', '>=', $cantidad_ninos)->get();
       }
 
       return [];

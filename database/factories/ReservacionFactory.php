@@ -15,5 +15,7 @@ $factory->define(Reservacion::class, function (Faker $faker) {
         'cliente_id' => $faker -> numberBetween(1, 100),
         'metodo_pago_id' => $faker -> numberBetween(1, 3),
         'promocion_id' => $faker -> numberBetween(1, 3),
+        'cantidad_adultos' => $faker -> numberBetween(1, 4),
+        'cantidad_ninos' => $faker -> numberBetween(1, 8),
     ];
 });
