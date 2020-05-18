@@ -367,13 +367,13 @@ class ReservacionCrudController extends CrudController
             'value' => "<h2>Información de la reservación</h2>
                         <hr>
                         <div class='w-100 d-flex flex-wrap justify-content-between'>
-                          <span id='cliente' class='w-50 mb-2'><strong>Cliente: </strong>" . $reservacion->cliente ? $reservacion->cliente->nombre : '' . "</span>
-                          <span id='habitacion' class='w-50 mb-2'><strong># Habitación: </strong>" . $reservacion->habitacion ? $reservacion->habitacion->numero : '' . "</span>
-                          <span id='fecha_entrada' class='w-50 mb-2'><strong>Fecha de entrada: </strong>" . $reservacion->fecha_entrada ? $reservacion->fecha_entrada->format('d/m/Y H:i') : '' . "Hrs</span>
-                          <span id='fecha_salida' class='w-50 mb-2'><strong>Fecha de salida: </strong>" . $reservacion->fecha_salida ? $reservacion->fecha_salida->format('d/m/Y H:i') : ''. "Hrs</span>
-                          <span id='tipo_habitacion' class='w-50 mb-2'><strong>Tipo de habitación: </strong>" . $reservacion->habitacion ? ($reservacion->habitacion->tipoHabitacion ? $reservacion->habitacion->tipoHabitacion->nombre : '') : '' . "</span>
+                          <span id='cliente' class='w-50 mb-2'><strong>Cliente: </strong>" . ($reservacion->cliente ? $reservacion->cliente->nombre : '') . "</span>
+                          <span id='habitacion' class='w-50 mb-2'><strong># Habitación: </strong>" . ($reservacion->habitacion ? $reservacion->habitacion->numero : '') . "</span>
+                          <span id='fecha_entrada' class='w-50 mb-2'><strong>Fecha de entrada: </strong>" . ($reservacion->fecha_entrada ? $reservacion->fecha_entrada->format('d/m/Y H:i') : '') . "Hrs</span>
+                          <span id='fecha_salida' class='w-50 mb-2'><strong>Fecha de salida: </strong>" . ($reservacion->fecha_salida ? $reservacion->fecha_salida->format('d/m/Y H:i') : ''). "Hrs</span>
+                          <span id='tipo_habitacion' class='w-50 mb-2'><strong>Tipo de habitación: </strong>" . ($reservacion->habitacion ? ($reservacion->habitacion->tipoHabitacion ? $reservacion->habitacion->tipoHabitacion->nombre : '') : '') . "</span>
                           <span id='promocion' class='w-50 mb-2'><strong>Promoción: </strong>" . ($reservacion->promocion ? $reservacion->promocion->nombre : 'Ninguna promoción aplicada') . "</span>
-                          <span id='costo_total' class='w-50 mb-2'><strong>Costo total: </strong>" . $reservacion->costo_total ? number_format($reservacion->costo_total, 2) : '' . "</span>
+                          <span id='costo_total' class='w-50 mb-2'><strong>Costo total: </strong>" . ($reservacion->costo_total ? number_format($reservacion->costo_total, 2) : '') . "</span>
                           <span id='servicios_adicionales' class='w-50 mb-2'><strong>Servicios Adicionales: </strong>" . $reservacion->getServiciosAdicionales() . "</span>
                         </div>"
           ]);
