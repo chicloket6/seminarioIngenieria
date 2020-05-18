@@ -14,6 +14,7 @@ use App\Models\Habitacion;
 use App\Models\Promocion;
 use \App\Models\Cliente;
 use \App\Models\MetodoPago; 
+use \App\Models\TipoHabitacion; 
 
 /**
  * Class ReporteCrudController
@@ -143,13 +144,11 @@ class ReporteCrudController extends CrudController
             'type'  => 'select2',
             'label' => 'Tipo De Habitación'
           ], function () {
-          return [
-            1 => 'Normal',
-            2 => 'Suite',
-            3 => 'Lujo',
-          ];
+            return TipoHabitacion::all()->pluck('nombre', 'id')->toArray();
           }, function ($value) { // if the filter is active
-                $this->crud->addClause('where', 'tipo_habitacion_id', $value);
+                $this->crud->addClause('whereHas', 'habitacion.tipoHabitacion', function($q) use ($value){
+                    $q->where('id', $value);
+                });
           });
 
           $this->crud->addFilter([
@@ -163,16 +162,6 @@ class ReporteCrudController extends CrudController
             ];
           }, function ($value) { // if the filter is active
                 $this->crud->addClause('where', 'status_reservacion', $value);
-          });
-
-          $this->crud->addFilter([
-            'type' => 'text',
-            'name' => 'costo_total',
-            'label'=> 'Costo Total'
-          ], 
-          false, 
-          function($value) { // if the filter is active
-             $this->crud->addClause('where', 'costo_total', 'like', '%'.$value.'%');
           });
 
           $this->crud->addFilter([

@@ -28,7 +28,7 @@ class ServiciosAdicionalesTableSeeder extends Seeder
         $sa->save();
 
         $sa = new ServicioAdicional();
-        $sa->nombre = 'Picina';
+        $sa->nombre = 'Piscina';
         $sa->costo = 250;
         $sa->save();
     }

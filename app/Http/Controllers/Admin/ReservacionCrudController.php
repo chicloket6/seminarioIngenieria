@@ -20,6 +20,7 @@ use App\Models\Promocion;
 use \App\Models\Cliente;
 use \App\Models\MetodoPago; 
 use \App\Models\ServicioAdicional; 
+use \App\Models\TipoHabitacion; 
 use DB;
 
 /**
@@ -162,11 +163,7 @@ class ReservacionCrudController extends CrudController
         'type'  => 'select2',
         'label' => 'Tipo De Habitación'
       ], function () {
-      return [
-        1 => 'Normal',
-        2 => 'Suite',
-        3 => 'Lujo',
-      ];
+       return TipoHabitacion::all()->pluck('nombre', 'id')->toArray();
       }, function ($value) { // if the filter is active
             $this->crud->addClause('whereHas', 'habitacion.tipoHabitacion', function($q) use ($value){
               $q->where('id', $value);
@@ -472,7 +469,7 @@ class ReservacionCrudController extends CrudController
             $cambios['Servicios adicionales: '] = 'Cambió de '.$serA.' a '.$ser;
           }
         }
-        else if(count($reservacion->serviciosAdicionales) > 0){
+        else if(count($reservacion->serviciosAdicionales) > 0 && $reservacion->fecha_entrada > Carbon::now()->addDays(3)){
           $ser = '';
           foreach($reservacion->serviciosAdicionales as $sa){
             $ser .= $sa->nombre . " ";
