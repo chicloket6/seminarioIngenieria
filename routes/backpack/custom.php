@@ -31,7 +31,7 @@ Route::group([//RUTAS PARA GERENCIA SOLAMENTE
 
 Route::group([//RUTAS PARA TODOS LOS ROLES (GERENCIA Y RECEPCION)
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
-    'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
+    'middleware' => ['web', config('backpack.base.middleware_key', 'admin'), 'role:Gerente|Recepción'],
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
     //CRUD (VISTAS)

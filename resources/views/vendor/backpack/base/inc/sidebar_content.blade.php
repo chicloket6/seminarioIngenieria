@@ -1,5 +1,7 @@
+@if(backpack_user()->hasRole('Gerente') || backpack_user()->hasRole('Recepción'))
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('cliente') }}'><i class='nav-icon fa fa-user-tie'></i> Clientes</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('reservacion') }}'><i class='nav-icon fa fa-concierge-bell'></i> Reservaciones</a></li>
+@endif
 
 @if(backpack_user()->hasRole('Gerente'))
 	
@@ -9,7 +11,7 @@
 		<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon fa fa-id-card-alt"></i> Autenticación</a>
 		<ul class="nav-dropdown-items">
 		<li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}"><i class="nav-icon fa fa-user"></i> <span>Usuarios</span></a></li>
-		<li class="nav-item"><a class="nav-link" href="{{ backpack_url('role') }}"><i class="nav-icon fa fa-user-tag"></i> <span>Roles</span></a></li>
+		<!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('role') }}"><i class="nav-icon fa fa-user-tag"></i> <span>Roles</span></a></li> -->
 		<!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i class="nav-icon fa fa-key"></i> <span>Permissions</span></a></li> -->
 		</ul>
 	</li>
