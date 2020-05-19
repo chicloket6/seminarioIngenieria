@@ -75,7 +75,7 @@ class ReservacionCrudController extends CrudController
                 $q->where('numero', 'like', '%'.$searchTerm.'%');
             });
         }
-     ]);
+      ]);
 
      $this->crud->addColumn([
       'name' => 'habitacion.tipoHabitacion.nombre', // The db column name
@@ -102,12 +102,12 @@ class ReservacionCrudController extends CrudController
          // 'format' => 'l j F Y H:i:s', // use something else than the base.default_datetime_format config value
      ]);
 
-     $this->crud->addColumn([
-        'name' => 'status_reservacion',
-        'label' => 'Status De La Reservación',
-        'type' => 'boolean',
-        'options' => [0 => 'Inactiva', 1 => 'Activa'],
-      ]);
+      //  $this->crud->addColumn([
+      //     'name' => 'status_reservacion',
+      //     'label' => 'Status De La Reservación',
+      //     'type' => 'boolean',
+      //     'options' => [0 => 'Inactiva', 1 => 'Activa'],
+      //   ]);
 
       $this->crud->addColumn([
           'name' => 'costo_total',
@@ -273,7 +273,7 @@ class ReservacionCrudController extends CrudController
 
         $this->crud->addField([  // Select2
             'label' => "# Habitación <span id='tipo_habitacion_label_id'></span>",
-            'type' => 'select2',
+            'type' => 'habitacion',
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
             'attribute' => 'numero', // foreign key attribute that is shown to user
@@ -358,7 +358,7 @@ class ReservacionCrudController extends CrudController
           
           $this->crud->addField([  // Select2
             'label' => "# Habitación <span id='tipo_habitacion_label_id'></span>",
-            'type' => 'select2',
+            'type' => 'habitacion',
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
             'attribute' => 'numero', // foreign key attribute that is shown to user

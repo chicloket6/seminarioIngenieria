@@ -45,6 +45,11 @@ class HabitacionCrudController extends CrudController
          $this->crud->addColumn([
             'name' => 'tipoHabitacion.nombre', // The db column name
             'label' => "Tipo de habitación", // Table column heading
+            'searchLogic' => function ($query, $column, $searchTerm) {
+              $query->orWhereHas('tipoHabitacion', function($q) use ($searchTerm){
+                  $q->where('nombre', 'like', '%'.$searchTerm.'%');
+              });
+            }
          ]);
 
          $this->crud->addColumn([
@@ -60,6 +65,11 @@ class HabitacionCrudController extends CrudController
          $this->crud->addColumn([
             'name' => 'status.nombre', // The db column name
             'label' => "Estatus", // Table column heading
+            'searchLogic' => function ($query, $column, $searchTerm) {
+              $query->orWhereHas('status', function($q) use ($searchTerm){
+                  $q->where('nombre', 'like', '%'.$searchTerm.'%');
+              });
+            }
          ]);
 
 
