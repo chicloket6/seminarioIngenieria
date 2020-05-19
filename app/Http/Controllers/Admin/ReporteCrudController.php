@@ -81,12 +81,12 @@ class ReporteCrudController extends CrudController
              // 'format' => 'l j F Y H:i:s', // use something else than the base.default_datetime_format config value
          ]);
 
-         $this->crud->addColumn([
-            'name' => 'status_reservacion',
-            'label' => 'Status De La Reservación',
-            'type' => 'boolean',
-            'options' => [0 => 'Inactiva', 1 => 'Activa'],
-        ]);
+        //  $this->crud->addColumn([
+        //     'name' => 'status_reservacion',
+        //     'label' => 'Status De La Reservación',
+        //     'type' => 'boolean',
+        //     'options' => [0 => 'Inactiva', 1 => 'Activa'],
+        // ]);
 
         $this->crud->addColumn([
             'name' => 'costo_total',
@@ -151,18 +151,18 @@ class ReporteCrudController extends CrudController
                 });
           });
 
-          $this->crud->addFilter([
-            'name'  => 'status',
-            'type'  => 'select2',
-            'label' => 'Status De La Reservación'
-          ], function () {
-            return [
-              1 => 'Activa',
-              2 => 'Inactiva',
-            ];
-          }, function ($value) { // if the filter is active
-                $this->crud->addClause('where', 'status_reservacion', $value);
-          });
+        //   $this->crud->addFilter([
+        //     'name'  => 'status',
+        //     'type'  => 'select2',
+        //     'label' => 'Status De La Reservación'
+        //   ], function () {
+        //     return [
+        //       1 => 'Activa',
+        //       2 => 'Inactiva',
+        //     ];
+        //   }, function ($value) { // if the filter is active
+        //         $this->crud->addClause('where', 'status_reservacion', $value);
+        //   });
 
           $this->crud->addFilter([
             'type' => 'text',
