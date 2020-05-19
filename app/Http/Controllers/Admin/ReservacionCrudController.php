@@ -272,7 +272,7 @@ class ReservacionCrudController extends CrudController
         ]);
 
         $this->crud->addField([  // Select2
-            'label' => "# Habitación",
+            'label' => "# Habitación <span id='tipo_habitacion_label_id'></span>",
             'type' => 'select2',
             'name' => 'habitacion_id', // the db column for the foreign key
             'entity' => 'Habitacion', // the method that defines the relationship in your Model
@@ -282,7 +282,7 @@ class ReservacionCrudController extends CrudController
                 return $query->where('status_id', '!=', '2')->with('tipoHabitacion')->get();
             }), // force the related options to be a custom query, instead of all();
             'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
+                'class' => 'form-group col-md-6'
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
@@ -304,7 +304,7 @@ class ReservacionCrudController extends CrudController
             'entity' => 'MetodoPago', // the method that defines the relationship in your Model
             'attribute' => 'nombre', // foreign key attribute that is shown to user
             'wrapperAttributes' => [
-                'class' => 'form-group col-md-4'
+                'class' => 'form-group col-md-6'
               ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
         ]);
 
@@ -327,7 +327,7 @@ class ReservacionCrudController extends CrudController
             'label' => 'Total',
             'type' => 'text',
             'wrapperAttributes' => [
-              'class' => 'form-group col-md-4'
+              'class' => 'form-group col-md-6'
             ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
             'attributes' => [
               'readonly' => 'readonly',
@@ -355,7 +355,20 @@ class ReservacionCrudController extends CrudController
 
       if($reservacion){
         if($reservacion->fecha_entrada > Carbon::now()->addDays(3)){//SE PUEDE EDITAR POR COMPLETO TODA LA RESERVACION SI LA FECHA DE ENTRADA ES MAYOR A 3 DIAS DE HOY
+          
+          $this->crud->addField([  // Select2
+            'label' => "# Habitación <span id='tipo_habitacion_label_id'></span>",
+            'type' => 'select2',
+            'name' => 'habitacion_id', // the db column for the foreign key
+            'entity' => 'Habitacion', // the method that defines the relationship in your Model
+            'attribute' => 'numero', // foreign key attribute that is shown to user
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+              ], // change the HTML attributes for the field wrapper - mostly for resizing fields 
+          ]);
+
           $this->setupCreateOperation();
+          
         }
         else{
           $this->crud->addField([   // CustomHTML
@@ -381,6 +394,16 @@ class ReservacionCrudController extends CrudController
     public function store()
     {
         $costo_total = $this->crud->request->request->get('costo_total');
+
+        $promocion = $this->crud->request->request->get('promocion_id');
+
+        if($promocion){
+          $promocion = Promocion::find($promocion);
+
+          if($promocion->fecha_final < Carbon::now()){
+            return redirect()->back()->withErrors(['La fecha para la promoción ha caducado, intente de nuevo la reservación'])->withInput((array)$this->crud->request->all());
+          }
+        }
 
         if($costo_total){
             $this->crud->request->request->set('costo_total', str_replace(',', '', $costo_total));
@@ -415,6 +438,16 @@ class ReservacionCrudController extends CrudController
         $serviciosAdicionales = $this->crud->request->request->get('serviciosAdicionales');
 
         $this->crud->request->request->remove('reservacion_actual');
+
+        $promocion = $this->crud->request->request->get('promocion_id');
+
+        if($promocion){
+          $promocion = Promocion::find($promocion);
+
+          if($promocion->fecha_final < Carbon::now()){
+            return redirect()->back()->withErrors(['La fecha para la promoción ha caducado, intente de nuevo la reservación'])->withInput((array)$this->crud->request->all());
+          }
+        }
 
         if($costo_total){
           $costo_total = str_replace(',', '', $costo_total);

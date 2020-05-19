@@ -68,7 +68,16 @@
 		var fecha_entrada = $(".datepicker-range-start");
 		var fecha_salida = $(".datepicker-range-end");
 		var serviciosAdicionales = $("[name='serviciosAdicionales[]']");
-		var i = 0;
+		var tipos_habitaciones = '{!! json_encode(App\Models\TipoHabitacion::all()) !!}';
+		var habitaciones = '{!! json_encode(App\Models\Habitacion::all()) !!}';
+
+		if(tipos_habitaciones){
+			tipos_habitaciones = JSON.parse(tipos_habitaciones);
+		}
+
+		if(habitaciones){
+			habitaciones = JSON.parse(habitaciones);
+		}
 
 		tiempo_estadia.on('apply.daterangepicker hide.daterangepicker', function(e, picker){
 			fecha_entrada.val( picker.startDate.format('YYYY-MM-DD HH:mm:ss') );
@@ -81,8 +90,22 @@
 			if($(this).attr('name') == cantidad_adultos.attr('name') || $(this).attr('name') == cantidad_ninos.attr('name')){
 				habitacionesDisponibles();
 			}
+
+			if($(this).attr('name') == habitacion.attr('name')){
+				actualizarTipoHabitacion(habitaciones.find(x => x.id === Number($(this).val())).tipo_habitacion_id);
+			}
 			calcularTotalPorFechas();
 		});
+
+		function actualizarTipoHabitacion(id){
+			if(tipos_habitaciones.length > 0){
+				let tipo_h = tipos_habitaciones.find(x => x.id === id);
+
+				if(tipo_h){
+					$("#tipo_habitacion_label_id").text(" - " + tipo_h.nombre + "($ " + tipo_h.costo + " / día)");
+				}
+			}
+		}
 
 		function habitacionesDisponibles(){
 			if(fecha_entrada.val() && fecha_salida.val() && cantidad_adultos.val() && cantidad_ninos.val()){
@@ -94,6 +117,9 @@
 						habitacion[0].options.length = 0;
 						let opciones = [];
 						for(var i = 0; i < result.length; i++){
+							if(i === 0){
+								actualizarTipoHabitacion(result[i].tipo_habitacion_id);
+							}
 							habitacion.append("<option value='" + result[i].id + "'>" + result[i].numero + "</option>");
 						}
 						calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
