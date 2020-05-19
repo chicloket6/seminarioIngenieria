@@ -97,12 +97,15 @@
 			calcularTotalPorFechas();
 		});
 
-		function actualizarTipoHabitacion(id){
+		function actualizarTipoHabitacion(id, actualizarLabel = true){
 			if(tipos_habitaciones.length > 0){
 				let tipo_h = tipos_habitaciones.find(x => x.id === id);
 
 				if(tipo_h){
-					$("#tipo_habitacion_label_id").text(" - " + tipo_h.nombre + "($ " + tipo_h.costo + " / día)");
+					if(actualizarLabel){
+						$("#tipo_habitacion_label_id").text(" - " + tipo_h.nombre + "($ " + tipo_h.costo + " / día)");
+					}
+					return tipo_h;
 				}
 			}
 		}
@@ -120,7 +123,7 @@
 							if(i === 0){
 								actualizarTipoHabitacion(result[i].tipo_habitacion_id);
 							}
-							habitacion.append("<option value='" + result[i].id + "'>" + result[i].numero + "</option>");
+							habitacion.append("<option value='" + result[i].id + "'>" + result[i].numero + " - " + actualizarTipoHabitacion(result[i].tipo_habitacion_id, false).nombre + "</option>");
 						}
 						calcularTotalPorFechas(habitacion.val(), fecha_entrada.val(), fecha_salida.val(), promocion.val());
 					},
