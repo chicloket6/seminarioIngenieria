@@ -263,9 +263,9 @@ class ReservacionCrudController extends CrudController
 
         $this->crud->addField([
           'name' => 'cantidad_ninos',
-          'label' => 'Cantidad de niños (1 - 8) Precio por niño: ' . env('PRECIO_POR_NINO', 250),
+          'label' => 'Cantidad de niños (0 - 8) Precio por niño: ' . env('PRECIO_POR_NINO', 250),
           'type' => 'number',
-          'attributes' => ['min' => 1, 'max' => 8],
+          'attributes' => ['min' => 0, 'max' => 8],
           'wrapperAttributes' => [
             'class' => 'form-group col-md-6'
           ],
@@ -522,7 +522,7 @@ class ReservacionCrudController extends CrudController
           $serviciosAdicionales = ServicioAdicional::whereIn('id', $request->get('serviciosAdicionales'))->get();
         }
 
-        if($fecha_entrada && $fecha_salida && $habitacion && $cantidad_adultos && $cantidad_ninos){
+        if($fecha_entrada && $fecha_salida && $habitacion && $cantidad_adultos){
             $fecha_entrada = new Carbon($fecha_entrada);
             $fecha_salida = new Carbon($fecha_salida);
 
@@ -552,16 +552,21 @@ class ReservacionCrudController extends CrudController
       $cantidad_adultos = $request->get('cantidad_adultos');
       $cantidad_ninos = $request->get('cantidad_ninos');
 
-      if($fecha_entrada && $fecha_salida && $cantidad_adultos && $cantidad_ninos){
+      if($fecha_entrada && $fecha_salida && $cantidad_adultos){
         $fecha_entrada = new Carbon($fecha_entrada);
         $fecha_salida = new Carbon($fecha_salida);
         $fecha_entrada->subHours(3);
 
-        return Habitacion::where(function($query) use ($fecha_entrada){
-          $query->whereHas('reservaciones', function($q) use ($fecha_entrada){
-            $q->whereDate('fecha_salida', '<', $fecha_entrada);
-          })->orWhere('id', '!=', 0);//EN CASO DE NO TENER RESERVACIONES EN EL SISTEMA
-        })->where('status_id', 1)->where('max_adultos', '>=', $cantidad_adultos)->where('max_ninos', '>=', $cantidad_ninos)->get();
+        $reservaciones = Reservacion::where('fecha_salida', '>=', $fecha_entrada)->pluck('habitacion_id');
+
+        if(count($reservaciones) > 0){
+          $habitaciones = Habitacion::whereNotIn('id', $reservaciones)->get();
+        }
+        else{
+          $habitaciones = Habitacion::all();
+        }
+        
+        return $habitaciones;
       }
 
       return [];
