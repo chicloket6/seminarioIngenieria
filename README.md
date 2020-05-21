@@ -1,78 +1,37 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<h1 align="center">Sistema Hotel Honolulu</h1>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+<p align="center" style="display:flex; flex-wrap:wrap; justify-content:center; align-items: center;">
+
+<a style="width: 25%;"><img  src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg"></a>
+<a style="width: 25%" href="https://backpackforlaravel.com/"><img style="" src="https://backpackforlaravel.com/presentation/img/backpack/logos/backpack_logo_color.png" alt="Backpack for Laravel"></a>
+<a style="width: 25%" href="https://laravel-excel.com/" style="text-decoration: none">Laravel Excel</a>
+<a style="width: 25%" href="https://github.com/Laravel-Backpack/PermissionManager" style="text-decoration: none">Permission Manager</a>
 </p>
 
-## About Laravel
+## Integrantes
+-Erick Márquez
+-Israel Martinez
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Acerca del Sistema Hotel Honolulu
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Es un sistema que busca resolver el problema de reservaciones en el Hotel Honolulu. El sistema cuenta con las siguientes caracteristicas:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- CRUD para la la mayoría de las vistas en el sistema.
+- Cuenta con un sistema de autoverificación de disponibilidad de habitaciones dependiendo de varias opciones dadas.
+- Cuenta con 2 roles base, el primero es "Gerencia", este rol permite ver el sistema comolo veria un administrador de cualquier otro sistema, el segundo es "Recepción", este rol solo permite el acceso a reservaciones y clientes.
+- El sistema es capaz de mandar correo electrónico (haciendo uso de Gmail smtp) una vez realizada una reservación con éxito al cliente. También si se modifica alguna cosa en su reservación, o si es eliminada dicha reservación.
+- Para el "Gerente" se encuentra una vista llamada "Reportes", la cual contiene la información de las reservaciones y un botón que genera un archivo Excel y permite la descarga del mismo.
 
-## Learning Laravel
+##Requisitos
+- PHP 7.2.5 mínimo
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+##Instalación
+- Clonar/Descargar el proyecto.
+- Copiar contenido del archivo ".env.example" que se encuentra en la raíz del proyecto y pegarlo dentro de un archivo nuevo/creado llamado ".env" también en la raíz del proyecto.
+- En la raíz del proyecto también se encuentra un archivo llamado "correo honolulu.txt", copiar solo las variables de entorno y reemplazarlas (solo reemplazar las de mailgun) por las que están en el ".env".
+- En la terminal, dentro del proyecto, ejecutar el comando "composer install" para instalar todos los paquetes necesarios para el sistema.
+- Ejecutar el comando "php artisan key:generate" en caso de que dentro del ".env" la variable "APP_KEY" se encuentre vacía.
+- Crear una base de datos en su sistema local.
+- En ".env" en las variable "DB_DATABASE" poner el nombre de la base de datos a la que accederá el sistema, "DB_USERNAME" el nombre del usuario en la misma base de datos, "DB_PASSWORD" en caso de que el usuaro  de la base tenga una contraseña ponerla ahí.
+- Ejecutar en la terminal "php artisan migrate --seed"
+- Ejecutar en la terminal "php artisan serve" y dentro del navegador de internet escribir localhost:8000, o si usa algún otro sistema de host virtual acceder mediante dicho host.
