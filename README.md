@@ -1,16 +1,14 @@
 <h1 align="center">Sistema Hotel Honolulu</h1>
 
-<p align="center" style="display:flex; flex-wrap:wrap; justify-content:center; align-items: center;">
-
-<a style="width: 25%;"><img  src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg"></a>
-<a style="width: 25%" href="https://backpackforlaravel.com/"><img style="" src="https://backpackforlaravel.com/presentation/img/backpack/logos/backpack_logo_color.png" alt="Backpack for Laravel"></a>
-<a style="width: 25%" href="https://laravel-excel.com/" style="text-decoration: none">Laravel Excel</a>
-<a style="width: 25%" href="https://github.com/Laravel-Backpack/PermissionManager" style="text-decoration: none">Permission Manager</a>
-</p>
-
 ## Integrantes
--Erick Márquez
--Israel Martinez
+- Erick Márquez
+- Israel Martinez
+
+## Herramientas utilizadas
+- [Laravel](https://laravel.com/)
+- [BackpackForLaravel](https://backpackforlaravel.com)
+- [Laravel Excel](https://laravel-excel.com)
+- [Permission Manager](https://github.com/Laravel-Backpack/PermissionManager)
 
 ## Acerca del Sistema Hotel Honolulu
 
