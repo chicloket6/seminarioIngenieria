@@ -20,10 +20,10 @@ Es un sistema que busca resolver el problema de reservaciones en el Hotel Honolu
 - El sistema es capaz de mandar correo electrónico (haciendo uso de Gmail smtp) una vez realizada una reservación con éxito al cliente. También si se modifica alguna cosa en su reservación, o si es eliminada dicha reservación.
 - Para el "Gerente" se encuentra una vista llamada "Reportes", la cual contiene la información de las reservaciones y un botón que genera un archivo Excel y permite la descarga del mismo.
 
-##Requisitos
+## Requisitos
 - PHP 7.2.5 mínimo
 
-##Instalación
+## Instalación
 - Clonar/Descargar el proyecto.
 - Copiar contenido del archivo ".env.example" que se encuentra en la raíz del proyecto y pegarlo dentro de un archivo nuevo/creado llamado ".env" también en la raíz del proyecto.
 - En la raíz del proyecto también se encuentra un archivo llamado "correo honolulu.txt", copiar solo las variables de entorno y reemplazarlas (solo reemplazar las de mailgun) por las que están en el ".env".
